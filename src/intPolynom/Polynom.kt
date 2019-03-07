@@ -2,7 +2,7 @@ package intPolynom
 
 import kotlin.math.pow
 
-
+// вариант 1
 class Polynom(vararg consts: Int) {
     val coefficientsArray = if (consts.isEmpty()) intArrayOf(0)
     else consts.dropWhile { it == 0 && it != consts.last() }.toIntArray()
