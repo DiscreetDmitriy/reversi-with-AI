@@ -4,24 +4,34 @@ import kotlin.math.pow
 
 
 class Polynom(vararg consts: Int) {
-    val coefficients: IntArray = if (consts.isEmpty()) intArrayOf(0) else consts
+    val coefficientsArray = if (consts.isEmpty()) intArrayOf(0)
+    else consts.dropWhile { it == 0 && it != consts.last() }.toIntArray()
 
-    operator fun unaryMinus(): Polynom = Polynom(*coefficients.map { -it }.toIntArray())
+    operator fun plus(other: Polynom): Polynom {
+        val list = coefficientsArray.toMutableList()
+        val otherList = other.coefficientsArray.toMutableList()
 
-    operator fun plus(other: Polynom): Polynom =
-        if (coefficients.size >= other.coefficients.size)
-            Polynom(*coefficients.mapIndexed { index, value -> value + other.coefficients[index] }.toIntArray())
-        else
-            Polynom(*other.coefficients.mapIndexed { index, value -> value + coefficients[index] }.toIntArray())
+        while (list.size < otherList.size) list.add(0, 0)
+        while (list.size > otherList.size) otherList.add(0, 0)
 
-    operator fun minus(other: Polynom): Polynom {
-        val coefficients = coefficients.toMutableList()
-        while (coefficients.size < other.coefficients.size) coefficients.add(0, 0)
-        return Polynom(*coefficients.mapIndexed { index, value -> value - other.coefficients[index] }.toIntArray())
+        return Polynom(*list.mapIndexed { index, value -> value + otherList[index] }.toIntArray())
     }
 
+
+    operator fun minus(other: Polynom): Polynom {
+        val list = coefficientsArray.toMutableList()
+        val otherList = other.coefficientsArray.toMutableList()
+
+        while (list.size < otherList.size) list.add(0, 0)
+        while (list.size > otherList.size) otherList.add(0, 0)
+
+        return Polynom(*list.mapIndexed { index, value -> value - otherList[index] }.toIntArray())
+    }
+
+
     fun powerToConst(): Map<Int, Int> =
-        coefficients.mapIndexed { index, v -> coefficients.size - index - 1 to v }.toMap()
+        coefficientsArray.mapIndexed { index, v -> coefficientsArray.size - index - 1 to v }.toMap()
+
 
     operator fun times(other: Polynom): Polynom {
         val res = mutableMapOf<Int, Int>()
@@ -33,41 +43,71 @@ class Polynom(vararg consts: Int) {
         return Polynom(*res.values.toIntArray())
     }
 
-    operator fun div(other: Polynom): Polynom {
-        val map = this.powerToConst().toMap()
-        val otherMap = other.powerToConst().toMap()
-        val divResult = mutableMapOf<Int, Int>()
+
+    infix fun divToMod(other: Polynom): Pair<Polynom, Polynom> {
+        var map = this.powerToConst()
+        val otherMap = other.powerToConst()
+
+        var newPolynom = this
         var leadPower = map.keys.first()
-        var otherLeadPower = otherMap.keys.first()
-        println(map)
+        val otherLeadPower = otherMap.keys.first()
 
-        if (leadPower < otherLeadPower) return Polynom()
+        val divResult = mutableMapOf<Int, Int>()
+        val modResult = mutableMapOf<Int, Int>()
 
-        while (leadPower >= otherLeadPower) {
+        if (leadPower < otherLeadPower) return Polynom() to Polynom()
 
+        while (leadPower > otherLeadPower) {
+            var powerDifference = leadPower - otherLeadPower
+
+            divResult[powerDifference] = map.values.first() / otherMap.values.first()
+
+            val array = otherMap.values.toMutableList()
+            while (powerDifference > 0) {
+                array.add(0)
+                powerDifference--
+            }
+
+            newPolynom -= Polynom(map.values.first() / otherMap.values.first()) * Polynom(*array.toIntArray())
+            modResult[leadPower] = newPolynom.powerToConst()[leadPower] ?: 0
+            if (newPolynom.coefficientsArray.size - 1 == leadPower)
+                newPolynom = Polynom(*newPolynom.coefficientsArray.drop(1).toIntArray())
+
+            map = newPolynom.powerToConst()
+            leadPower--
         }
 
-        print(divResult)
-        return Polynom(*divResult.values.toIntArray())
+        try {
+            divResult[0] = map.values.first() / otherMap.values.first()
+        } catch (e: Exception) {
+            return Polynom() to Polynom()
+        }
 
+        newPolynom -= Polynom(map.values.first() / otherMap.values.first()) * other
+        if (map.size - newPolynom.coefficientsArray.size == 1) modResult[map.size - 1] = 0
+        map = newPolynom.powerToConst()
+        map.forEach { modResult[it.key] = modResult.getOrDefault(it.key, 0) + it.value }
+
+        return Polynom(*divResult.values.toIntArray()) to Polynom(*modResult.values.dropWhile { it == 0 }.toIntArray())
     }
 
-    infix fun count(x: Int) =
-        coefficients
-            .mapIndexed { index, acc -> acc * x.toDouble().pow(coefficients.size - index - 1).toInt() }.sum()
+
+    operator fun div(other: Polynom) = (this divToMod other).first
+
+    operator fun rem(other: Polynom) = (this divToMod other).second
+
+
+    infix fun count(x: Int) = coefficientsArray
+        .reversed()
+        .mapIndexed { index, acc -> acc * x.toDouble().pow(index).toInt() }
+        .sum()
 
 
     override fun equals(other: Any?): Boolean =
-        other is Polynom &&
-                coefficients.size == other.coefficients.size &&
-                coefficients.contentEquals(other.coefficients)
+        other is Polynom && coefficientsArray.contentEquals(other.coefficientsArray)
 
-    override fun hashCode(): Int {
-        var result = 0
-        for (i in coefficients)
-            result = result * 31 + coefficients[i]
-        return result
-    }
+    override fun hashCode(): Int = this.coefficientsArray.contentHashCode()
+
 
     override fun toString(): String {
 
@@ -80,42 +120,40 @@ class Polynom(vararg consts: Int) {
 
         fun Int.isPrintedX(): String = if (this > 1) "x^$this" else if (this == 1) "x" else ""
 
-        // отбрасываем первые незначащие нули
-        val powersToConsts = this.powerToConst().toList().dropWhile { it.second == 0 }.toMap()
-        if (powersToConsts.isEmpty()) return "0"
+        val powersToConsts = this.powerToConst()
+        if (powersToConsts == mapOf(0 to 0)) return "0"
+        if (powersToConsts == mapOf(0 to 1)) return "1"
 
         val sb = StringBuilder()
 
         // выводим первый коэффициент и первый х
         // делаем это не в цикле потому что перед коэф. не должно быть знака
-        // если это не отрицатеоьное число,  конечно
-        val firstConst: Int = powersToConsts.values.first()
-        val firstConstStr: String = if (firstConst in 0..1) "" else "$firstConst"
-        val firstX: String = powersToConsts.keys.first().isPrintedX()
+        // если это не отрицательное число,  конечно
+        val firstConst = powersToConsts.values.first()
+        val firstConstStr = if (firstConst == 1) "" else "$firstConst"
+        val firstX = powersToConsts.keys.first().isPrintedX()
         sb.append(firstConstStr + firstX)
 
-        var genericPowersToConsts = powersToConsts.toList().drop(1).toMap()
+        var middlePowersToConsts = powersToConsts.toList().drop(1).toMap()
 
         // также не в цикле считаем последнее число
         // потому что оно пишется без х
-        // и его нужно писать даже если оно равно единице
-        val lastConst: Int =
-            if (genericPowersToConsts.isNotEmpty()) genericPowersToConsts.values.last() else return sb.toString()
-        val lastConStr: String = when (lastConst) {
-            0 -> ""
-            1 -> " + 1"
-            -1 -> " - 1"
-            else -> if (lastConst > 0) " + $lastConst" else " - ${-lastConst}"
+        // и его нужно писать, даже если оно равно единице
+        val lastConst =
+            if (middlePowersToConsts.isNotEmpty()) middlePowersToConsts.values.last() else return sb.toString()
+        val lastConStr = when {
+            lastConst == 0 -> ""
+            lastConst > 0 -> " + $lastConst"
+            else -> " - ${-lastConst}"
         }
 
-        genericPowersToConsts = genericPowersToConsts.toList().dropLast(1).toMap()
+        middlePowersToConsts = middlePowersToConsts.toList().dropLast(1).toMap()
 
-        // если коэф. равен нулю, то цикл переходит к следуюощей степени
-        for ((power, const) in genericPowersToConsts)
+        // если коэф. равен нулю, то цикл переходит к следующей степени
+        for ((power, const) in middlePowersToConsts)
             sb.append("${const.isPrintedConst() ?: continue}${power.isPrintedX()}")
 
-        // проверка, не ялвяется ли последнее число единственным коэффициентом
-        sb.append(if (sb.isEmpty()) lastConst else lastConStr)
+        sb.append(lastConStr)
 
         return sb.toString()
     }
