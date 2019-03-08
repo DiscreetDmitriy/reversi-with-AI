@@ -1,3 +1,1 @@
-# SSP
-
-Polytech - Kruto
+# Polytech - Kruto
