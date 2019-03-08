@@ -1,1 +1,1 @@
-# Polyteck - Cool
+# Polytech - Cool
