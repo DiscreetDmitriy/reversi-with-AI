@@ -2,11 +2,13 @@ package grepTest
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.kohsuke.args4j.OptionHandlerFilter
+import java.io.File
+import java.nio.charset.Charset
 
-class A {
+class GrepTest {
+
     @Test
-    fun a() {
-        assertTrue(true)
+    fun grep() {
+        assertEquals(1,1)
     }
 }

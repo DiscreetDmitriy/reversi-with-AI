@@ -36,15 +36,6 @@ class IntPolynomTests {
     }
 
     @Test
-    fun pow() {
-        assertEquals(mapOf(2 to 1, 1 to 4, 0 to 5), Polynom(1, 4, 5).powerToConst())
-        assertEquals(mapOf(0 to 0), Polynom(0).powerToConst())
-        assertEquals(mapOf(0 to 1), Polynom(0, 0, 0, 0, 1).powerToConst())
-        assertEquals(mapOf(2 to 3, 1 to 2, 0 to 1), Polynom(3, 2, 1).powerToConst())
-        assertEquals(mapOf(2 to 1, 1 to 2, 0 to 3), Polynom(1, 2, 3).powerToConst())
-    }
-
-    @Test
     fun times() {
         assertEquals(Polynom(), Polynom() * Polynom())
         assertEquals(Polynom(3, 3, 3), Polynom(1, 1, 1) * Polynom(3))

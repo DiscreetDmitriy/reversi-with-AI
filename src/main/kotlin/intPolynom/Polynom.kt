@@ -29,7 +29,7 @@ class Polynom(vararg consts: Int) {
     }
 
 
-    fun powerToConst(): Map<Int, Int> =
+    private fun powerToConst(): Map<Int, Int> =
         coefficientsArray.mapIndexed { index, v -> coefficientsArray.size - index - 1 to v }.toMap()
 
 

@@ -3,14 +3,24 @@ plugins {
 }
 
 group 'poly'
-version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
+jar {
+    manifest {
+        attributes "Main-Class": 'grep.GrepLauncherKt'
+    }
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.4.0'
     compile group: 'args4j', name: 'args4j', version: '2.33'
 }
