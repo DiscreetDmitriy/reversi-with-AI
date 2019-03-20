@@ -1,16 +1,15 @@
 package grepTest
 
+import grep.Grep
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
-import java.lang.IllegalArgumentException
 import org.junit.jupiter.api.Test
 import java.io.File
-import grep.Grep
 
 class GrepTest {
 
-    private fun assertFileContent(name: String, expectedContent: String) {
-        val file = File(name)
+    private fun assertFileContent(fileName: String, expectedContent: String) {
+        val file = File(fileName)
         val content = file.readLines().joinToString("\n")
         assertEquals(expectedContent, content)
     }

@@ -2,27 +2,28 @@
 
 package grep
 
-import org.kohsuke.args4j.*
+import org.kohsuke.args4j.Argument
+import org.kohsuke.args4j.CmdLineException
+import org.kohsuke.args4j.CmdLineParser
+import org.kohsuke.args4j.Option
 import java.io.File
-import java.io.IOException
-import java.lang.IllegalArgumentException
 
 // вариант 3
 class GrepLauncher {
-    @Option(name = "-v", usage = "Invert filter condition")
-    var v: Boolean = false
+    @Option(name = "-v", usage = "Invert filter condition flag")
+    val v: Boolean = false
 
-    @Option(name = "-i", usage = "Ignore word case")
-    var i: Boolean = false
+    @Option(name = "-i", usage = "Ignore word case flag")
+    val i: Boolean = false
 
-    @Option(name = "-r", usage = "Regex")
-    var r: Boolean = false
+    @Option(name = "-r", usage = "Regex pattern flag")
+    val r: Boolean = false
 
-    @Argument(required = true, metaVar = "word", usage = "word")
-    var word: String = ""
+    @Argument(required = true, metaVar = "word", usage = "word you need to find")
+    val word: String = ""
 
-    @Argument(required = true, metaVar = "inputname", index = 1, usage = "Text file")
-    var inputName: String = ""
+    @Argument(required = true, metaVar = "fileName", index = 1, usage = "File name")
+    val fileName: String = ""
 
     fun launch(args: Array<String>) {
         val parser = CmdLineParser(this)
@@ -37,7 +38,7 @@ class GrepLauncher {
         }
 
         try {
-            Grep(inputName, word).find(v, i, r)
+            Grep(fileName, word).find(v, i, r)
             File("output.txt").run {
                 bufferedReader()
                     .readLines()
@@ -50,10 +51,10 @@ class GrepLauncher {
                     .forEach(::println)
                 delete()
             }*/
-        } catch (e: IOException) {
+        } catch (e: java.io.IOException) {
             println("File error")
             println(e.message)
-        } catch (e: IllegalArgumentException) {
+        } catch (e: java.lang.IllegalArgumentException) {
             println("Illegal Argument")
             println(e.message)
         }

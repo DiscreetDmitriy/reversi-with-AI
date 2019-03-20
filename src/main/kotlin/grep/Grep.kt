@@ -1,7 +1,7 @@
 package grep
 
-import java.io.*
-import java.lang.IllegalArgumentException
+import java.io.File
+import java.io.IOException
 
 class Grep(inputName: String, private val word: String) {
     private val inputFile = File(inputName)
