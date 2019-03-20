@@ -1,11 +1,11 @@
-@file:Suppress( "SpellCheckingInspection")
+@file:Suppress("SpellCheckingInspection")
 
 package grep
 
-import org.kohsuke.args4j.CmdLineException
-import org.kohsuke.args4j.CmdLineParser
-import org.kohsuke.args4j.Argument
-import org.kohsuke.args4j.Option
+import org.kohsuke.args4j.*
+import java.io.File
+import java.io.IOException
+import java.lang.IllegalArgumentException
 
 // вариант 3
 class GrepLauncher {
@@ -38,7 +38,23 @@ class GrepLauncher {
 
         try {
             Grep(inputName, word).find(v, i, r)
-        } catch (e: Exception) {
+            File("output.txt").run {
+                bufferedReader()
+                    .readLines()
+                    .forEach(::println)
+                delete()
+            }
+            /*with(File("output.txt")) {
+                bufferedReader()                        // interesting function.
+                    .readLines()                        // I wonder which one is better to use here?
+                    .forEach(::println)
+                delete()
+            }*/
+        } catch (e: IOException) {
+            println("File error")
+            println(e.message)
+        } catch (e: IllegalArgumentException) {
+            println("Illegal Argument")
             println(e.message)
         }
     }
@@ -46,3 +62,4 @@ class GrepLauncher {
 
 fun main(args: Array<String>) =
     GrepLauncher().launch(args)
+

@@ -48,17 +48,35 @@ class IntPolynomTests {
 
     @Test
     fun divToMod() {
-        assertEquals(Polynom(1, 4, -5, 18) to Polynom(), Polynom(1, 6, 3, 8, 36) divToMod Polynom(1, 2))
-        assertEquals(Polynom(2, 0, 9, -5) to Polynom(1, -1, 1, 0, 23), Polynom(5, 3, 19, 8, 13) divToMod Polynom(2, 2))
+        assertEquals(
+            Polynom(1, 4, -5, 18) to Polynom(),
+            Polynom(1, 6, 3, 8, 36) divToMod Polynom(1, 2)
+        )
+        assertEquals(
+            Polynom(2, 0, 9, -5) to Polynom(1, -1, 1, 0, 23),
+            Polynom(5, 3, 19, 8, 13) divToMod Polynom(2, 2)
+        )
         assertEquals(
             Polynom(7, 0, -8, 11, -8, -8, 9) to Polynom(-1, 0, 0, -1, 0, 1, -9, -26),
             Polynom(14, 13, -2, 6, -11, -10, -13, -7, -8) divToMod Polynom(2, 2, 2)
         )
-        assertEquals(Polynom(2) to Polynom(1, 1, 1), Polynom(5, 5, 5) divToMod Polynom(2, 2, 2))
+        assertEquals(
+            Polynom(2) to Polynom(1, 1, 1),
+            Polynom(5, 5, 5) divToMod Polynom(2, 2, 2)
+        )
         assertEquals(Polynom() to Polynom(), Polynom() divToMod Polynom(0))
-        assertEquals(Polynom(3) to Polynom(0), Polynom(0, 6) divToMod Polynom(0, 0, 0, 2))
-        assertEquals(Polynom(1) to Polynom(0), Polynom(5, 0, 0, 0, 0) divToMod Polynom(5, 0, 0, 0, 0))
-        assertEquals(Polynom(1, 2, 1) to Polynom(0), Polynom(1, 3, 3, 1) divToMod Polynom(1, 1))
+        assertEquals(
+            Polynom(3) to Polynom(0),
+            Polynom(0, 6) divToMod Polynom(0, 0, 0, 2)
+        )
+        assertEquals(
+            Polynom(1) to Polynom(0),
+            Polynom(5, 0, 0, 0, 0) divToMod Polynom(5, 0, 0, 0, 0)
+        )
+        assertEquals(
+            Polynom(1, 2, 1) to Polynom(0),
+            Polynom(1, 3, 3, 1) divToMod Polynom(1, 1)
+        )
         assertEquals(Polynom(1) to Polynom(2), Polynom(5) divToMod Polynom(3))
         assertEquals(Polynom(1, -2) to Polynom(), Polynom(1, 0, -4) divToMod Polynom(1, 2))
     }

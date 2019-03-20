@@ -3,24 +3,27 @@ package grep
 import java.io.*
 import java.lang.IllegalArgumentException
 
-class Grep(inputName: String, val word: String) {
-    val inputFile = File(inputName)
+class Grep(inputName: String, private val word: String) {
+    private val inputFile = File(inputName)
 
-    @Throws(IOException::class)
+    @Throws(IOException::class, IllegalArgumentException::class)
     fun find(v: Boolean, i: Boolean, r: Boolean) {
+        val writer = File("output.txt").bufferedWriter()
 
         if (!r && !word.matches(Regex("^[a-zA-Zа-яА-ЯёЁ]+$")))
             throw IllegalArgumentException()
 
-        for (str in inputFile.readLines()) {
+        for (line in inputFile.readLines()) {
             val regex =
                 if (i) word.toRegex(RegexOption.IGNORE_CASE) else word.toRegex()
 
             val containsMatchIn =
-                if (v) !regex.containsMatchIn(str) else regex.containsMatchIn(str)
+                if (v) !regex.containsMatchIn(line) else regex.containsMatchIn(line)
 
-            if (containsMatchIn) println(str)
+            if (containsMatchIn) writer.write("$line\n")
         }
+        writer.close()
     }
 
 }
+
