@@ -1,1 +1,0 @@
-# Polytech - Kruto
