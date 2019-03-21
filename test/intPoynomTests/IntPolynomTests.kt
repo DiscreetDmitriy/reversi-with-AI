@@ -1,8 +1,8 @@
 package intPoynomTests
 
+import intPolynom.Polynom
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
-import intPolynom.*
 
 class IntPolynomTests {
 

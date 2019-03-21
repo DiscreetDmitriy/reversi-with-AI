@@ -8,7 +8,7 @@ class Grep(inputName: String, private val word: String) {
 
     @Throws(IOException::class, IllegalArgumentException::class)
     fun find(v: Boolean, i: Boolean, r: Boolean) {
-        val writer = File("output.txt").bufferedWriter()
+        val writer = File("files/output.txt").bufferedWriter()
 
         if (!r && !word.matches(Regex("^[a-zA-Zа-яА-ЯёЁ]+$")))
             throw IllegalArgumentException()

@@ -11,19 +11,19 @@ import java.io.File
 // вариант 3
 class GrepLauncher {
     @Option(name = "-v", usage = "Invert filter condition flag")
-    val v: Boolean = false
+    var v: Boolean = false
 
     @Option(name = "-i", usage = "Ignore word case flag")
-    val i: Boolean = false
+    var i: Boolean = false
 
     @Option(name = "-r", usage = "Regex pattern flag")
-    val r: Boolean = false
+    var r: Boolean = false
 
     @Argument(required = true, metaVar = "word", usage = "word you need to find")
-    val word: String = ""
+    var word: String = ""
 
     @Argument(required = true, metaVar = "fileName", index = 1, usage = "File name")
-    val fileName: String = ""
+    var fileName: String = ""
 
     fun launch(args: Array<String>) {
         val parser = CmdLineParser(this)
@@ -39,18 +39,12 @@ class GrepLauncher {
 
         try {
             Grep(fileName, word).find(v, i, r)
-            File("output.txt").run {
+            File("files/output.txt").run {
                 bufferedReader()
                     .readLines()
                     .forEach(::println)
                 delete()
             }
-            /*with(File("output.txt")) {
-                bufferedReader()                        // interesting function.
-                    .readLines()                        // I wonder which one is better to use here?
-                    .forEach(::println)
-                delete()
-            }*/
         } catch (e: java.io.IOException) {
             println("File error")
             println(e.message)

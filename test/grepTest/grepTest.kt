@@ -15,63 +15,88 @@ class GrepTest {
     }
 
     @Test
-    fun flagTests() {
+    fun flag000() {
         Grep("files/input.txt", "a").find(v = false, i = false, r = false)
-        assertFileContent("output.txt", "a 1")
+        assertFileContent("files/output.txt", "a 1")
+    }
 
+    @Test
+    fun flag001() {
         Grep("files/input.txt", "[1,2]").find(v = false, i = false, r = true)
         assertFileContent(
-            "output.txt", """a 1
+            "files/output.txt", """a 1
             |b 2""".trimMargin()
         )
+    }
 
+    @Test
+    fun flag010() {
         Grep("files/input.txt", "a").find(v = false, i = true, r = false)
         assertFileContent(
-            "output.txt", """a 1
+            "files/output.txt", """a 1
             |A 5""".trimMargin()
         )
+    }
 
+    @Test
+    fun flagThrows() {
         assertThrows(IllegalArgumentException::class.java) {
             Grep("files/input.txt", "[1,2]").find(v = true, i = false, r = false)
         }
+    }
 
+    @Test
+    fun flag100() {
         Grep("files/input.txt", "a").find(v = true, i = false, r = false)
         assertFileContent(
-            "output.txt", """b 2
+            "files/output.txt", """b 2
                 |c 3
                 |d 4
                 |A 5
             """.trimMargin()
         )
+    }
 
 
+    @Test
+    fun flag101() {
         Grep("files/input.txt", "[1,2]").find(v = true, i = false, r = true)
         assertFileContent(
-            "output.txt",
+            "files/output.txt",
             """c 3
             |d 4
             |A 5""".trimMargin()
         )
+    }
 
+    @Test
+    fun flag110() {
         Grep("files/input.txt", "a").find(v = true, i = true, r = false)
         assertFileContent(
-            "output.txt",
+            "files/output.txt",
             """b 2
             |c 3
             |d 4""".trimMargin()
         )
+    }
 
+    @Test
+    fun flag011() {
         Grep("files/input.txt", "z").find(v = false, i = true, r = true)
-        assertFileContent("output.txt", "")
+        assertFileContent("files/output.txt", "")
+    }
 
+    @Test
+    fun flag111() {
         Grep("files/input.txt", "a").find(v = true, i = true, r = true)
         assertFileContent(
-            "output.txt",
+            "files/output.txt",
             """b 2
             |c 3
             |d 4""".trimMargin()
         )
-        File("output.txt").delete()
     }
+
 }
+
 
