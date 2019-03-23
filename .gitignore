@@ -73,5 +73,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-files/output.txt
+grepFiles/output.txt
 build/

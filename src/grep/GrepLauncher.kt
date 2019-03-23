@@ -39,7 +39,7 @@ class GrepLauncher {
 
         try {
             Grep(fileName, word).find(v, i, r)
-            File("files/output.txt").run {
+            File("grepFiles/output.txt").run {
                 bufferedReader()
                     .readLines()
                     .forEach(::println)
