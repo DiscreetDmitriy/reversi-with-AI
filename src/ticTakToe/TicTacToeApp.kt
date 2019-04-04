@@ -4,10 +4,10 @@ import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
 import javafx.application.Application
+import javafx.application.Application.launch
 import javafx.geometry.Pos
 import javafx.scene.Parent
 import javafx.scene.Scene
-import javafx.scene.input.MouseButton
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
@@ -41,13 +41,11 @@ class TicTacToeApp : Application() {
             }
         }
 
-        for (y in 0..2) {
+        for (y in 0..2)
             combos.add(Combo(board[0][y], board[1][y], board[2][y]))
-        }
 
-        for (x in 0..2) {
+        for (x in 0..2)
             combos.add(Combo(board[x][0], board[x][1], board[x][2]))
-        }
 
         combos.add(Combo(board[0][0], board[1][1], board[2][2]))
         combos.add(Combo(board[2][0], board[1][1], board[0][2]))
@@ -55,24 +53,24 @@ class TicTacToeApp : Application() {
         return root
     }
 
-    @Throws(Exception::class)
     override fun start(primaryStage: Stage) {
         primaryStage.scene = Scene(createContent())
         primaryStage.show()
     }
 
     fun checkState() {
-        for (combo in combos) {
+        for (combo in combos)
             if (combo.isComplete) {
                 playable = false
                 playWinAnimation(combo)
                 break
             }
-        }
     }
 
     private fun playWinAnimation(combo: Combo) {
+
         val line = Line()
+
         line.startX = combo.tiles[0].centerX
         line.startY = combo.tiles[0].centerY
         line.endX = combo.tiles[0].centerX
@@ -83,7 +81,7 @@ class TicTacToeApp : Application() {
         val timeline = Timeline()
         timeline.keyFrames.add(
             KeyFrame(
-                Duration.seconds(1.0),
+                Duration.seconds(0.5),
                 KeyValue(line.endXProperty(), combo.tiles[2].centerX),
                 KeyValue(line.endYProperty(), combo.tiles[2].centerY)
             )
@@ -92,26 +90,34 @@ class TicTacToeApp : Application() {
     }
 
     inner class Combo(vararg tiles: Tile?) {
-        internal val tiles = tiles as Array<Tile>
+        val tiles = tiles as Array<Tile>
 
         val isComplete: Boolean
             get() = if (tiles[0].value.isEmpty()) false
             else tiles[0].value == tiles[1].value && tiles[0].value == tiles[2].value
+
     }
 
     inner class Tile : StackPane() {
-
         private val text = Text()
-        val centerX = translateX + 100
-        val centerY= translateY + 100
-        val value: String = text.text
+
+        val centerX: Double
+            get() = translateX + 100
+
+        val centerY: Double
+            get() = translateY + 100
+
+        val value: String
+            get() = text.text
+
+        private var isOccupied = false
 
         init {
             val border = Rectangle(200.0, 200.0)
-            border.fill = null
+            border.fill = Color.ANTIQUEWHITE
             border.stroke = Color.BLACK
 
-            text.font = Font.font(72.0)
+            text.font = Font.font(120.0)
 
             alignment = Pos.CENTER
             children.addAll(border, text)
@@ -120,21 +126,17 @@ class TicTacToeApp : Application() {
                 if (!playable)
                     return@setOnMouseClicked
 
-                if (it.button == MouseButton.PRIMARY) {
-                    if (!turnX)
-                        return@setOnMouseClicked
-
-                    drawX()
-                    turnX = false
-                    checkState()
-                } else if (it.button == MouseButton.SECONDARY) {
-                    if (turnX)
-                        return@setOnMouseClicked
-
-                    drawO()
-                    turnX = true
-                    checkState()
-                }
+                if (!isOccupied)
+                    if (turnX) {
+                        isOccupied = true
+                        turnX = false
+                        drawX()
+                    } else {
+                        isOccupied = true
+                        turnX = true
+                        drawO()
+                    }
+                checkState()
             }
         }
 
@@ -148,7 +150,6 @@ class TicTacToeApp : Application() {
     }
 }
 
-fun main(args: Array<String>) =
-    Application.launch(*args)
+fun main(args: Array<String>) = launch(*args)
 
 
