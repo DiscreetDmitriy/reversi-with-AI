@@ -8,6 +8,7 @@ import javafx.application.Application.launch
 import javafx.geometry.Pos
 import javafx.scene.Parent
 import javafx.scene.Scene
+import javafx.scene.input.MouseButton
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
@@ -21,9 +22,11 @@ import javafx.util.Duration
 class TicTacToeApp : Application() {
 
     private val board = MutableList(3) { MutableList<Tile?>(3) { null } }
+            as MutableList<MutableList<Tile>>
     private val combos = mutableListOf<Combo>()
     var playable = true
     var turnX = true
+    private val line = Line()
 
     private val root = Pane()
 
@@ -40,6 +43,7 @@ class TicTacToeApp : Application() {
                 board[j][i] = tile
             }
         }
+
 
         for (y in 0..2)
             combos.add(Combo(board[0][y], board[1][y], board[2][y]))
@@ -58,6 +62,7 @@ class TicTacToeApp : Application() {
         primaryStage.show()
     }
 
+
     fun checkState() {
         for (combo in combos)
             if (combo.isComplete) {
@@ -67,9 +72,8 @@ class TicTacToeApp : Application() {
             }
     }
 
-    private fun playWinAnimation(combo: Combo) {
 
-        val line = Line()
+    private fun playWinAnimation(combo: Combo) {
 
         line.startX = combo.tiles[0].centerX
         line.startY = combo.tiles[0].centerY
@@ -89,6 +93,18 @@ class TicTacToeApp : Application() {
         timeline.play()
     }
 
+    private fun resetBoard() {
+        for (i in 0..2)
+            for (j in 0..2) {
+                board[i][j].text.text = null
+                board[i][j].isOccupied = false
+            }
+
+        playable = true
+        turnX = true
+        root.children.remove(line)
+    }
+
     inner class Combo(vararg tiles: Tile?) {
         val tiles = tiles as Array<Tile>
 
@@ -99,7 +115,7 @@ class TicTacToeApp : Application() {
     }
 
     inner class Tile : StackPane() {
-        private val text = Text()
+        val text = Text()
 
         val centerX: Double
             get() = translateX + 100
@@ -110,7 +126,7 @@ class TicTacToeApp : Application() {
         val value: String
             get() = text.text
 
-        private var isOccupied = false
+        var isOccupied = false
 
         init {
             val border = Rectangle(200.0, 200.0)
@@ -123,10 +139,14 @@ class TicTacToeApp : Application() {
             children.addAll(border, text)
 
             setOnMouseClicked {
+
+                if (it.button == MouseButton.MIDDLE)
+                    resetBoard()
+
                 if (!playable)
                     return@setOnMouseClicked
 
-                if (!isOccupied)
+                if (!isOccupied && it.button == MouseButton.PRIMARY)
                     if (turnX) {
                         isOccupied = true
                         turnX = false
@@ -138,6 +158,7 @@ class TicTacToeApp : Application() {
                     }
                 checkState()
             }
+
         }
 
         private fun drawX() {
