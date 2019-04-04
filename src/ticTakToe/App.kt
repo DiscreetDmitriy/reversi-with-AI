@@ -1,3 +1,3 @@
-package reversi
+package ticTakToe
 
 //class MyApp: App(MyView::class)
