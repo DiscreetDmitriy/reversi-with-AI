@@ -1,3 +1,3 @@
-package ticTakToe
+package ticTacToe
 
 //class MyApp: App(MyView::class)

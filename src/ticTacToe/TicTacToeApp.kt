@@ -1,4 +1,4 @@
-package ticTakToe
+package ticTacToe
 
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
