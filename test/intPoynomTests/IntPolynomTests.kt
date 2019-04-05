@@ -1,8 +1,9 @@
 package intPoynomTests
 
 import intPolynom.Polynom
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
 
 class IntPolynomTests {
 
@@ -14,7 +15,7 @@ class IntPolynomTests {
                     Polynom(14, 13, -2, 6, -11, -10, -13, -7, -8)
         )
     }
-
+    
     @Test
     fun plus() {
         assertEquals(Polynom(0), Polynom(0) + Polynom())

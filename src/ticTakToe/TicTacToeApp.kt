@@ -4,7 +4,6 @@ import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
 import javafx.application.Application
-import javafx.application.Application.launch
 import javafx.geometry.Pos
 import javafx.scene.Parent
 import javafx.scene.Scene
@@ -21,8 +20,7 @@ import javafx.util.Duration
 
 class TicTacToeApp : Application() {
 
-    private val board = MutableList(3) { MutableList<Tile?>(3) { null } }
-            as MutableList<MutableList<Tile>>
+    private val board = MutableList(3) { MutableList(3) { Tile() } }
     private val combos = mutableListOf<Combo>()
     var playable = true
     var turnX = true
@@ -35,12 +33,11 @@ class TicTacToeApp : Application() {
 
         for (i in 0..2) {
             for (j in 0..2) {
-                val tile = Tile()
+                val tile = board[j][i]
                 tile.translateX = (j * 200).toDouble()
                 tile.translateY = (i * 200).toDouble()
 
                 root.children.add(tile)
-                board[j][i] = tile
             }
         }
 
@@ -105,13 +102,10 @@ class TicTacToeApp : Application() {
         root.children.remove(line)
     }
 
-    inner class Combo(vararg tiles: Tile?) {
-        val tiles = tiles as Array<Tile>
-
+    inner class Combo(vararg val tiles: Tile) {
         val isComplete: Boolean
             get() = if (tiles[0].value.isEmpty()) false
             else tiles[0].value == tiles[1].value && tiles[0].value == tiles[2].value
-
     }
 
     inner class Tile : StackPane() {
@@ -132,15 +126,13 @@ class TicTacToeApp : Application() {
             val border = Rectangle(200.0, 200.0)
             border.fill = Color.ANTIQUEWHITE
             border.stroke = Color.BLACK
-
             text.font = Font.font(120.0)
-
             alignment = Pos.CENTER
             children.addAll(border, text)
 
             setOnMouseClicked {
 
-                if (it.button == MouseButton.MIDDLE)
+                if (it.button == MouseButton.SECONDARY)
                     resetBoard()
 
                 if (!playable)
@@ -156,9 +148,9 @@ class TicTacToeApp : Application() {
                         turnX = true
                         drawO()
                     }
+
                 checkState()
             }
-
         }
 
         private fun drawX() {
@@ -170,7 +162,4 @@ class TicTacToeApp : Application() {
         }
     }
 }
-
-fun main(args: Array<String>) = launch(*args)
-
 
