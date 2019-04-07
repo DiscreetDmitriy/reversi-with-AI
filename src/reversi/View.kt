@@ -1,18 +1,17 @@
 package reversi
 
-import javafx.scene.paint.Color.*
-import javafx.scene.text.FontWeight
+import reversi.Styles.Companion.firstButton
+import reversi.Styles.Companion.mainStyle
 import tornadofx.*
 import tornadofx.View
 
 class View : View("My View") {
     override val root = vbox {
+        addClass(mainStyle)
         button("Press me") {
-            style {
-                fontWeight = FontWeight.BOLD
-                borderColor += box(RED, GREEN, YELLOW, PINK)
-                size = 80.px
-                rotate = 45.deg
+            addClass(firstButton)
+            setOnAction {
+                println("button has been pressed")
             }
         }
     }
