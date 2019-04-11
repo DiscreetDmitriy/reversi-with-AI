@@ -1,4 +1,0 @@
-package reversi
-
-class Model {
-}

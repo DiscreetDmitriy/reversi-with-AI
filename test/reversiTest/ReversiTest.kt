@@ -5,8 +5,20 @@ import org.junit.jupiter.api.*
 
 class ReversiTest {
     @Test
-    fun testOfSomething() {
+    fun `Test of something`() {
         assertEquals(true,true)
+    }
+
+    @Nested
+    inner class TestofFeature {
+        @Test
+        fun `1`() {
+            assert(true)
+        }
+        @Test
+        fun `2`() {
+            assert(true)
+        }
     }
 
 }

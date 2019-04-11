@@ -1,26 +1,25 @@
 package reversi
 
-import javafx.scene.paint.Color
-import javafx.scene.text.FontWeight
+import com.sun.prism.paint.Color
 import tornadofx.*
 
 class Styles : Stylesheet() {
-
     companion object {
-        val firstButton by cssclass()
-        val mainStyle by cssclass()
+        val gridStyle by cssclass()
+        val stackPaneStyle by cssclass()
+        val cellStyle by cssclass()
+        val black = Color.BLACK
     }
 
     init {
-        firstButton {
-            fontWeight = FontWeight.BOLD
-            borderColor += box(Color.RED, Color.GREEN, Color.YELLOW, Color.PINK)
-            padding = box(20.px)
+        stackPaneStyle {
+           borderColor += box(fill)
         }
-        mainStyle {
-            prefWidth = 200.px
-            prefHeight = 200.px
-            padding = box(50.px)
+        gridStyle {
+            padding = box(0.px)
+        }
+        cellStyle {
+            padding = box(0.px)
         }
     }
 }
