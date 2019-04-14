@@ -1,6 +1,6 @@
-package reversi
+package reversi.View
 
-import tornadofx.*
+import reversi.View.Styles
 import tornadofx.App
 
 class App : App(View::class, Styles::class)
