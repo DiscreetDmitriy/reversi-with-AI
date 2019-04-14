@@ -4,8 +4,10 @@ import grep.Grep
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import java.io.File
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GrepTest {
 
     private fun assertFileContent(fileName: String, expectedContent: String) {

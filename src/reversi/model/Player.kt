@@ -1,21 +1,11 @@
 package reversi.model
 
-data class Player(var chip: ChipValue) {
+data class Player(var playerChip: ChipValue) {
     var isChanged = false
-    private var playerCanMove: Boolean = false
+    var playerCanMove = false
 
     fun changePlayer() {
-        chip = if (chip == ChipValue.BLACK)
-            ChipValue.WHITE
-        else
-            ChipValue.BLACK
-    }
-
-    fun canMove(): Boolean {
-        return playerCanMove
-    }
-
-    fun setCanMove(value: Boolean) {
-        this.playerCanMove = value
+        playerChip = if (playerChip == ChipValue.BLACK) ChipValue.WHITE
+        else ChipValue.BLACK
     }
 }
