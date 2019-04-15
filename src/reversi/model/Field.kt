@@ -17,34 +17,50 @@ class Field {
         emptyField[4][4] = ChipValue.WHITE
     }
 
+    private val directions = listOf(-1 to -1, -1 to 0, -1 to -1, 0 to -1, 0 to 1, 1 to 0, 1 to 1)
+
     fun trueDirections(x: Int, y: Int, player: Player): List<Boolean> {
 
         if (field[x][y] != ChipValue.EMPTY) return listOf()
 
-        val directions = mutableListOf<Boolean>()
+        val resDirections = mutableListOf<Boolean>()
 
-        for (dx in -1..1)
-            for (dy in -1..1) {
+        for (dir in directions) {
 
-                var lastChip = false
-                var i = x
-                var j = y
-                var sum = 0
+            var lastChip = false
+            var i = x
+            var j = y
+            var sum = 0
 
-                while (i in 0..7 && j in 0..7) {
-                    if (field[i + dx][j + dy] == ChipValue.EMPTY) break
-                    if (field[i + dx][j + dy] == player.playerChip) {
-                        lastChip = true
-                        break
-                    } else sum++
+            while (i in 0..7 && j in 0..7) {
+                if (field[i + dir.first][j + dir.second] == ChipValue.EMPTY) break
+                if (field[i + dir.first][j + dir.second] == player.playerChip) {
+                    lastChip = true
+                    break
+                } else sum++
 
-                    i += dx
-                    j += dy
+                i += dir.first
+                j += dir.second
 
-                }
-                directions.add(lastChip && sum > 0)
             }
-        return if (directions.contains(true)) directions else listOf()
+            resDirections.add(lastChip && sum > 0)
+        }
+        return if (resDirections.contains(true)) resDirections else listOf()
+    }
+
+    fun getFreeCells(player: Player): Array<BooleanArray> {
+        val freeCells = Array(8) { BooleanArray(8) }
+        var value: Boolean
+        player.playerCanMove = false
+        for (i in 0..7) {
+            for (j in 0..7) {
+                value = trueDirections(i, j, player) != listOf<Boolean>()
+                freeCells[i][j] = value
+                field[i][j] = ChipValue.OCCUPIABLE
+                if (value) player.playerCanMove = true
+            }
+        }
+        return freeCells
     }
 
     fun blackAndWhiteScore(): Pair<Int, Int> {

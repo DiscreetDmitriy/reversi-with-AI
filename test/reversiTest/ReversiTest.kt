@@ -12,6 +12,7 @@ import reversi.model.Player
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ReversiTest {
     private val field = Field().field
+    val freeCells = Field().getFreeCells(Player(BLACK))
 
     @Test
     fun `Starting position`() {
@@ -28,6 +29,15 @@ class ReversiTest {
     @Test
     fun `directions `() {
         assertEquals(listOf<Boolean>(), Field().trueDirections(5,4 , Player(BLACK)))
+        for (i in 0..7) {
+            for (j in 0..7) {
+                if (i == 2 && j == 3 || i == 3 && j == 2 || i == 4 && j == 5 || i == 5 && j == 4) {
+                    assertEquals(true, freeCells[i][j])
+                } else {
+                    assertEquals(false, freeCells[i][j])
+                }
+            }
+        }
     }
 
     @Nested
