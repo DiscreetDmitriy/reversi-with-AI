@@ -17,13 +17,23 @@ class Field {
         emptyField[4][4] = ChipValue.WHITE
     }
 
-    private val directions = listOf(-1 to -1, -1 to 0, -1 to -1, 0 to -1, 0 to 1, 1 to 0, 1 to 1)
+    private val direction = setOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
 
     fun trueDirections(x: Int, y: Int, player: Player): List<Boolean> {
+
 
         if (field[x][y] != ChipValue.EMPTY) return listOf()
 
         val resDirections = mutableListOf<Boolean>()
+        val directions = when {
+            x == 0 && y == 0 -> direction.filter { it.first >= 0 && it.second >= 0 }.toSet()
+            x == 7 && y == 7 -> direction.filter { it.first <= 0 && it.second <= 0 }.toSet()
+            x == 0 -> direction.filter { it.first >= 0 }.toSet()
+            x == 7 -> direction.filter { it.first <= 0 }.toSet()
+            y == 0 -> direction.filter { it.second >= 0 }.toSet()
+            y == 7 -> direction.filter { it.second <= 0 }.toSet()
+            else -> direction.toSet()
+        }
 
         for (dir in directions) {
 
@@ -45,10 +55,10 @@ class Field {
             }
             resDirections.add(lastChip && sum > 0)
         }
-        return if (resDirections.contains(true)) resDirections else listOf()
+        return resDirections
     }
 
-    fun getFreeCells(player: Player): Array<BooleanArray> {
+    /*fun getFreeCells(player: Player): Array<BooleanArray> {
         val freeCells = Array(8) { BooleanArray(8) }
         var value: Boolean
         player.playerCanMove = false
@@ -61,7 +71,7 @@ class Field {
             }
         }
         return freeCells
-    }
+    }*/
 
     fun blackAndWhiteScore(): Pair<Int, Int> {
         var black = 0
