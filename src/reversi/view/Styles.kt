@@ -1,4 +1,4 @@
-package reversi.View
+package reversi.view
 
 import tornadofx.*
 
