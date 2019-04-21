@@ -1,5 +1,7 @@
 package reversi.model
 
+import java.lang.IllegalArgumentException
+
 class Field {
     private val emptyField = List(8) { MutableList(8) { ChipValue.EMPTY } }
     val field = emptyField.apply { restart() }
@@ -17,25 +19,15 @@ class Field {
         emptyField[4][4] = ChipValue.BLACK
     }
 
-    private val directions = listOf(
-
-        -1 to -1,
-        -1 to 0,
-        -1 to 1,
-        0 to -1,
-        0 to 1,
-        1 to -1,
-        1 to 0,
-        1 to 1
-    )
+    private val dirs = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
 
     fun trueDirections(x: Int, y: Int, player: Player): List<Boolean> {
 
-        if (field[x][y] != ChipValue.EMPTY) return listOf()
+        if (field[x][y] == ChipValue.BLACK || field[x][y] == ChipValue.WHITE) return listOf()
 
         val resDirections = mutableListOf<Boolean>()
 
-        for (dir in directions) {
+        for (dir in dirs) {
 
             var lastChip = false
             var i = x
@@ -44,34 +36,34 @@ class Field {
 
             while (i in 0..size && j in 0..size) {
 
-                if (i + dir.second !in 0..7 || j + dir.first !in 0..7) break
-                if (field[i + dir.second][j + dir.first] == ChipValue.EMPTY) break
+                val dx = i + dir.second
+                val dy = j + dir.first
 
-                val condition = field[i + dir.second][j + dir.first] == player.playerChip
+                if (dx !in 0..7 || dy !in 0..7) break
+                if (field[dx][dy] == ChipValue.EMPTY || field[dx][dy] == ChipValue.OCCUPIABLE) break
 
-                if (!condition) oppositeChipsBetween++
-                else if (condition) {
+                if (field[dx][dy] == player.opposite()) oppositeChipsBetween++
+                else if (field[dx][dy] == player.playerChip) {
                     lastChip = true
                     break
                 }
 
-
-                i += dir.second
-                j += dir.first
+                i = dx
+                j = dy
             }
             resDirections.add(lastChip && oppositeChipsBetween > 0)
         }
         return if (true in resDirections) resDirections else listOf()
     }
 
-    fun getFreeCells(player: Player): MutableList<MutableList<Boolean>> {
+    fun getFreeCells(player: Player): List<MutableList<Boolean>> {
         val freeCells = MutableList(8) { MutableList(8) { false } }
         for (i in 0..size)
             for (j in 0..size) {
-                val value = trueDirections(i, j, player) != listOf<Boolean>()
+                val value = trueDirections(i, j, player).isNotEmpty()
                 freeCells[i][j] = value
-                field[i][j] = if (value) ChipValue.OCCUPIABLE else ChipValue.EMPTY
-                if (value) player.isChanged = true
+                if (value) field[i][j] = ChipValue.OCCUPIABLE
+                if (value) player.playerCanMove = true
             }
         return freeCells
     }
@@ -88,4 +80,31 @@ class Field {
             }
         return black to white
     }
+
+    fun putChip(x: Int, y: Int, player: Player) {
+        val directions = trueDirections(x, y, player)
+
+        if (field[x][y] != ChipValue.OCCUPIABLE) throw IllegalArgumentException()
+        if (directions.isEmpty()) throw IllegalArgumentException()
+
+        var i = x
+        var j = y
+
+        field[x][y] = player.playerChip
+
+        for (dir in dirs) {
+
+            if (!directions[dirs.indexOf(dir)]) continue
+
+            val dx = i + dir.second
+            val dy = j + dir.first
+
+            while (field[dx][dy] == player.opposite()) {
+                field[dx][dy] = player.playerChip
+                i = dx
+                j = dy
+            }
+        }
+    }
 }
+

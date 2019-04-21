@@ -4,5 +4,12 @@ enum class ChipValue {
     BLACK,
     WHITE,
     EMPTY,
-    OCCUPIABLE
+    OCCUPIABLE;
+
+    override fun toString(): String = when(this) {
+        BLACK -> "B"
+        WHITE -> "W"
+        EMPTY -> "E"
+        OCCUPIABLE -> "O"
+    }
 }
