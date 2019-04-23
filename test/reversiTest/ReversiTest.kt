@@ -15,7 +15,7 @@ class ReversiTest {
     private val field = fieldClass.field
 
     @Suppress("unused")
-    private fun printField(cells: List<List<Any>>) {
+    fun printField(cells: List<List<Any>>) {
         println(cells[0].reversed())
         println(cells[1].reversed())
         println(cells[2].reversed())
@@ -135,7 +135,7 @@ class ReversiTest {
 
         player.changePlayer()
         fieldClass.getFreeCells(player)
-        fieldClass.putChip(5,2,player)
+        fieldClass.putChip(5, 2, player)
 
         assertEquals(BLACK, field[3][3])
         assertEquals(BLACK, field[4][4])
@@ -145,5 +145,22 @@ class ReversiTest {
         assertEquals(WHITE, field[5][2])
         printField(field)
     }
+
+//    @Test
+//    fun `viewModel inject check`() {
+//        ViewTest().test()
+//        ViewTest().fieldModel.field
+//    }
 }
+
+/*
+class ViewTest : View() {
+    val fieldModel: FieldModel by inject()
+    fun test() {
+        println(fieldModel.field.value.toString())
+//        ReversiTest().printField(fieldModel.field.value.toString())
+    }
+
+    override val root = label("name")
+}*/
 

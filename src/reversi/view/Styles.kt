@@ -1,24 +1,27 @@
 package reversi.view
 
+import javafx.geometry.Pos
+import javafx.scene.paint.Color
 import tornadofx.*
+import tornadofx.Stylesheet.Companion.datagrid
 
 class Styles : Stylesheet() {
     companion object {
-//        val gridStyle by cssclass()
-//        val stackPaneStyle by cssclass()
-//        val cellStyle by cssclass()
-//        val black = Color.BLACK
+        val windowSize = 820.0
     }
 
     init {
-//        stackPaneStyle {
-//           borderColor += box(fill)
-//        }
-//        gridStyle {
-//            padding = box(0.px)
-//        }
-//        cellStyle {
-//            padding = box(0.px)
+        Stylesheet.datagrid {
+            alignment = Pos.CENTER
+            backgroundColor += Color.WHITE
+        }
+        Stylesheet.datagridCell {
+            borderColor += box(Color.DARKGREY)
+            backgroundInsets = multi(box(1.px))
+        }
+//        datagrid {
+//            contextMenu {
+//            }
 //        }
     }
 }

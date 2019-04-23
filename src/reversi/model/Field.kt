@@ -1,5 +1,6 @@
 package reversi.model
 
+import tornadofx.*
 import java.lang.IllegalArgumentException
 
 class Field {
@@ -71,8 +72,8 @@ class Field {
     fun blackAndWhiteScore(): Pair<Int, Int> {
         var black = 0
         var white = 0
-//        = val black = field.map { a -> a.filter { b -> b == ChipValue.BLACK }.count() }.sum() to
-//        val white = field.map { a1 -> a1.filter { b -> b == ChipValue.WHITE }.count() }.sum()
+//        = val black = fieldModel.map { a -> a.filter { b -> b == ChipValue.BLACK }.count() }.sum() to
+//        val white = fieldModel.map { a1 -> a1.filter { b -> b == ChipValue.WHITE }.count() }.sum()
         for (i in 0..size)
             for (j in 0..size) {
                 if (field[i][j] == ChipValue.BLACK) black++
