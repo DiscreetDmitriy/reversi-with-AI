@@ -1,8 +1,5 @@
 package reversi.model
 
-import tornadofx.*
-import java.lang.IllegalArgumentException
-
 class Field {
     private val emptyField = List(8) { MutableList(8) { ChipValue.EMPTY } }
     val field = emptyField.apply { restart() }
@@ -85,8 +82,8 @@ class Field {
     fun putChip(x: Int, y: Int, player: Player) {
         val directions = trueDirections(x, y, player)
 
-        if (field[x][y] != ChipValue.OCCUPIABLE) throw IllegalArgumentException()
-        if (directions.isEmpty()) throw IllegalArgumentException()
+//        if (field[x][y] != ChipValue.OCCUPIABLE) throw IllegalArgumentException()
+//        if (directions.isEmpty()) throw IllegalArgumentException()
 
         var i = x
         var j = y

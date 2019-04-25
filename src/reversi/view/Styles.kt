@@ -3,25 +3,22 @@ package reversi.view
 import javafx.geometry.Pos
 import javafx.scene.paint.Color
 import tornadofx.*
-import tornadofx.Stylesheet.Companion.datagrid
 
 class Styles : Stylesheet() {
     companion object {
-        val windowSize = 820.0
+        const val windowSize = 800.0
+        const val cellSize = 100.0
+
     }
 
     init {
-        Stylesheet.datagrid {
+        datagrid {
             alignment = Pos.CENTER
             backgroundColor += Color.WHITE
         }
-        Stylesheet.datagridCell {
+        datagridCell {
             borderColor += box(Color.DARKGREY)
             backgroundInsets = multi(box(1.px))
         }
-//        datagrid {
-//            contextMenu {
-//            }
-//        }
     }
 }
