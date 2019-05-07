@@ -1,7 +1,7 @@
 package reversi.model
-
 class Field {
     private val emptyField = List(8) { MutableList(8) { ChipValue.EMPTY } }
+    val player = Player(ChipValue.BLACK)
     val field = emptyField.apply { restart() }
     private val size = field.size - 1
 
@@ -15,6 +15,8 @@ class Field {
         emptyField[4][3] = ChipValue.WHITE
         emptyField[3][3] = ChipValue.BLACK
         emptyField[4][4] = ChipValue.BLACK
+
+        player.playerChip = ChipValue.BLACK
     }
 
     private val dirs = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
@@ -83,7 +85,7 @@ class Field {
         val directions = trueDirections(x, y, player)
 
 //        if (field[x][y] != ChipValue.OCCUPIABLE) throw IllegalArgumentException()
-//        if (directions.isEmpty()) throw IllegalArgumentException()
+        if (directions.isEmpty()) throw IllegalArgumentException()
 
         var i = x
         var j = y
