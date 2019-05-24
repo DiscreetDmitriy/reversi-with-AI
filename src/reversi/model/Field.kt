@@ -83,9 +83,6 @@ class Field {
         if (fieldArray[x][y] != ChipValue.OCCUPIABLE) throw IllegalArgumentException()
         if (dirs.isEmpty()) throw IllegalArgumentException()
 
-        // добавил проверку на пропуск хода
-        if (!player.playerCanMove) player.changePlayer()
-
         fieldArray[x][y] = player.playerChip
 
         for (dir in directions) {
