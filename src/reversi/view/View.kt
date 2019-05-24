@@ -90,7 +90,6 @@ class View : View("Reversi") {
                                         if (hovering) Color.LIGHTGREEN else Color.WHITE,
                                         100.millis
                                     )
-                                    opacity = 0.7
                                 }
                                 Color.WHITE
                             }
