@@ -1,29 +1,29 @@
 package reversi.model
+
 class Field {
     private val emptyField = List(8) { MutableList(8) { ChipValue.EMPTY } }
     val player = Player(ChipValue.BLACK)
-    val field = emptyField.apply { restart() }
-    private val size = field.size 
+    val fieldArray = emptyField.apply { restart() }
 
 
     fun restart() {
-        for (i in 0 until size)
-            for (j in 0 until size)
+        for (i in 0 until FIELD_SIZE)
+            for (j in 0 until FIELD_SIZE)
                 emptyField[i][j] = ChipValue.EMPTY
 
-        emptyField[3][4] = ChipValue.WHITE
-        emptyField[4][3] = ChipValue.WHITE
-        emptyField[3][3] = ChipValue.BLACK
-        emptyField[4][4] = ChipValue.BLACK
+        emptyField[3][3] = ChipValue.WHITE
+        emptyField[4][4] = ChipValue.WHITE
+        emptyField[3][4] = ChipValue.BLACK
+        emptyField[4][3] = ChipValue.BLACK
 
         player.playerChip = ChipValue.BLACK
     }
 
     private val directions = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
 
-    fun trueDirections(x: Int, y: Int, player: Player): List<Boolean>   {
+    fun trueDirections(x: Int, y: Int, player: Player): List<Boolean> {
 
-        if (field[x][y] == ChipValue.BLACK || field[x][y] == ChipValue.WHITE) return listOf()
+        if (fieldArray[x][y] == ChipValue.BLACK || fieldArray[x][y] == ChipValue.WHITE) return listOf()
 
         val resDirections = mutableListOf<Boolean>()
 
@@ -34,16 +34,16 @@ class Field {
             var j = y
             var oppositeChipsBetween = 0
 
-            while (i in 0 until size && j in 0 until size) {
+            while (i in 0 until FIELD_SIZE && j in 0 until FIELD_SIZE) {
 
                 val dx = i + dir.second
                 val dy = j + dir.first
 
                 if (dx !in 0..7 || dy !in 0..7) break
-                if (field[dx][dy] == ChipValue.EMPTY || field[dx][dy] == ChipValue.OCCUPIABLE) break
+                if (fieldArray[dx][dy] == ChipValue.EMPTY || fieldArray[dx][dy] == ChipValue.OCCUPIABLE) break
 
-                if (field[dx][dy] == player.opposite()) oppositeChipsBetween++
-                else if (field[dx][dy] == player.playerChip) {
+                if (fieldArray[dx][dy] == player.opposite()) oppositeChipsBetween++
+                else if (fieldArray[dx][dy] == player.playerChip) {
                     lastChip = true
                     break
                 }
@@ -56,53 +56,59 @@ class Field {
         return if (true in resDirections) resDirections else listOf()
     }
 
-    fun getFreeCells(player: Player): List<MutableList<Boolean>> {
-        val freeCells = MutableList(8) { MutableList(8) { false } }
-        for (i in 0 until size)
-            for (j in 0 until size) {
-                val value = trueDirections(i, j, player).isNotEmpty()
-                freeCells[i][j] = value
-                if (value) field[i][j] = ChipValue.OCCUPIABLE
-                if (value) player.playerCanMove = true
+    fun getAvailableCells(player: Player) {
+        for (i in 0 until FIELD_SIZE)
+            for (j in 0 until FIELD_SIZE) {
+                if (trueDirections(i, j, player).isNotEmpty()) {
+                    fieldArray[i][j] = ChipValue.OCCUPIABLE
+                    player.playerCanMove = true
+                }
             }
-        return freeCells
     }
 
     fun blackAndWhiteScore(): Pair<Int, Int> {
         var black = 0
         var white = 0
-        for (i in 0 until size)
-            for (j in 0 until size) {
-                if (field[i][j] == ChipValue.BLACK) black++
-                else if (field[i][j] == ChipValue.WHITE) white++
+        for (i in 0 until FIELD_SIZE)
+            for (j in 0 until FIELD_SIZE) {
+                if (fieldArray[i][j] == ChipValue.BLACK) black++
+                else if (fieldArray[i][j] == ChipValue.WHITE) white++
             }
         return black to white
     }
 
-    fun putChip(x: Int, y: Int, player: Player) {
+    fun makeTurn(x: Int, y: Int, player: Player) {
         val dirs = trueDirections(x, y, player)
 
-//        if (field[x][y] != ChipValue.OCCUPIABLE) throw IllegalArgumentException()
+        if (fieldArray[x][y] != ChipValue.OCCUPIABLE) throw IllegalArgumentException()
         if (dirs.isEmpty()) throw IllegalArgumentException()
 
-        var i = x
-        var j = y
+        // добавил проверку на пропуск хода
+        if (!player.playerCanMove) player.changePlayer()
 
-        field[x][y] = player.playerChip
+        fieldArray[x][y] = player.playerChip
 
         for (dir in directions) {
+            var i = x
+            var j = y
 
             if (!dirs[directions.indexOf(dir)]) continue
 
-            val dx = i + dir.second
-            val dy = j + dir.first
-
-            while (field[dx][dy] == player.opposite()) {
-                field[dx][dy] = player.playerChip
-                i = dx
-                j = dy
+            while (fieldArray[i + dir.second][j + dir.first] == player.opposite()) {
+                fieldArray[i + dir.second][j + dir.first] = player.playerChip
+                i += dir.second
+                j += dir.first
             }
         }
+
+        for (row in 0 until FIELD_SIZE)
+            for (column in 0 until FIELD_SIZE)
+                if (fieldArray[row][column] == ChipValue.OCCUPIABLE)
+                    fieldArray[row][column] = ChipValue.EMPTY
+
+        player.changePlayer()
     }
 }
+
+const val FIELD_SIZE = 8
 

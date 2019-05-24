@@ -6,20 +6,18 @@ import tornadofx.*
 
 class Styles : Stylesheet() {
     companion object {
+        val dimension = Dimension(100.0, Dimension.LinearUnits.px)
         const val windowSize = 800.0
         const val cellSize = 100.0
+        const val chipRadius = 45.0
+
         val rec by cssclass()
-        val grid by cssclass()
     }
 
     init {
-        grid {
-            alignment = Pos.CENTER
-            backgroundColor += Color.WHITE
-        }
         rec {
-            prefHeight = Dimension(100.0, Dimension.LinearUnits.px)
-            prefWidth = Dimension(100.0, Dimension.LinearUnits.px)
+            prefHeight = dimension
+            prefWidth = dimension
 
             backgroundColor += Color.WHITE
 

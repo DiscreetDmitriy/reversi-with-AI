@@ -1,7 +1,6 @@
 package reversi.model
 
 data class Player(var playerChip: ChipValue) {
-
     var playerCanMove = false
 
     fun opposite(): ChipValue = if (playerChip == ChipValue.BLACK) ChipValue.WHITE else ChipValue.BLACK

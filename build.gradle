@@ -19,7 +19,6 @@ compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }
 sourceSets {
     main.kotlin.srcDirs += 'src'
     test.kotlin.srcDirs += 'test'
-    main.resources.srcDirs += 'main/reversi/resources'
 }
 
 jar {
