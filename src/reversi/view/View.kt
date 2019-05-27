@@ -5,8 +5,8 @@ import javafx.scene.control.Label
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import reversi.model.ChipValue.*
-import reversi.model.FIELD_SIZE
 import reversi.model.Field
+import reversi.model.Field.Companion.FIELD_SIZE
 import reversi.view.Styles.Companion.cellSize
 import reversi.view.Styles.Companion.chipRadius
 import reversi.view.Styles.Companion.rec
@@ -16,13 +16,9 @@ import tornadofx.View
 
 class View : View("Reversi") {
     private val field = Field()
-    private val fieldArray = field.fieldArray
-    private val player = field.player
 
     private val buttons = List(8) { MutableList(8) { StackPane() } }
     private var status: Label? = null
-
-    private fun hasFreeCells(): Boolean = fieldArray.any { row -> row.any { it == OCCUPIABLE } }
 
     override val root = borderpane {
         top {
@@ -50,10 +46,9 @@ class View : View("Reversi") {
                                 update()
 
                                 setOnMouseClicked {
-                                    if (fieldArray[row][column] == OCCUPIABLE)
-                                        field.makeTurn(row, column, player)
+                                    if (field.getCell(row,column) == OCCUPIABLE)
+                                        field.makeTurn(row, column, field.getCurrentPlayer())
 
-                                    field.getAvailableCells(player)
                                     update()
                                 }
                             }
@@ -68,10 +63,9 @@ class View : View("Reversi") {
     }
 
     private fun update() {
-        field.getAvailableCells(player)
         for (x in 0 until FIELD_SIZE)
             for (y in 0 until FIELD_SIZE) {
-                val cell = fieldArray[x][y]
+                val cell = field.getCell(x,y)
                 buttons[x][y].apply {
                     rectangle(height = cellSize, width = cellSize) {
                         fill = when (cell) {
@@ -99,9 +93,9 @@ class View : View("Reversi") {
             }
 
         val score = field.blackAndWhiteScore()
-        status?.text = if (hasFreeCells())
+        status?.text = if (field.hasFreeCells())
             "Score:  Black: ${score.first}, White: ${score.second}\t\t\t " +
-                    "Player ${if (player.playerChip == BLACK) "black" else "white"}'s turn"
+                    "Player ${if (field.getCurrentPlayer().playerChip == BLACK) "black" else "white"}'s turn"
         else
             "Game is finished.\t" +
                     "Winner is player ${if (score.first > score.second) "Black" else "White"}\t\t " +

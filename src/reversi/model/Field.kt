@@ -1,27 +1,49 @@
 package reversi.model
 
 class Field {
-    private val emptyField = List(8) { MutableList(8) { ChipValue.EMPTY } }
-    val player = Player(ChipValue.BLACK)
-    val fieldArray = emptyField.apply { restart() }
+
+    private val player = Player(ChipValue.BLACK)
+    private val fieldArray =
+        List(FIELD_SIZE) { MutableList(FIELD_SIZE) { ChipValue.EMPTY } }
+            .apply {
+                this[3][3] = ChipValue.WHITE
+                this[4][4] = ChipValue.WHITE
+                this[3][4] = ChipValue.BLACK
+                this[4][3] = ChipValue.BLACK
+
+                this[3][2] = ChipValue.OCCUPIABLE
+                this[2][3] = ChipValue.OCCUPIABLE
+                this[5][4] = ChipValue.OCCUPIABLE
+                this[4][5] = ChipValue.OCCUPIABLE
+            }
 
 
     fun restart() {
         for (i in 0 until FIELD_SIZE)
             for (j in 0 until FIELD_SIZE)
-                emptyField[i][j] = ChipValue.EMPTY
+                fieldArray[i][j] = ChipValue.EMPTY
 
-        emptyField[3][3] = ChipValue.WHITE
-        emptyField[4][4] = ChipValue.WHITE
-        emptyField[3][4] = ChipValue.BLACK
-        emptyField[4][3] = ChipValue.BLACK
+        fieldArray[3][3] = ChipValue.WHITE
+        fieldArray[4][4] = ChipValue.WHITE
+        fieldArray[3][4] = ChipValue.BLACK
+        fieldArray[4][3] = ChipValue.BLACK
+
+        fieldArray[3][2] = ChipValue.OCCUPIABLE
+        fieldArray[2][3] = ChipValue.OCCUPIABLE
+        fieldArray[5][4] = ChipValue.OCCUPIABLE
+        fieldArray[4][5] = ChipValue.OCCUPIABLE
 
         player.playerChip = ChipValue.BLACK
     }
 
+    fun getCell(x: Int, y: Int): ChipValue = fieldArray[x][y]
+
+    fun getCurrentPlayer(): Player = player
+
+
     private val directions = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
 
-    fun trueDirections(x: Int, y: Int, player: Player): List<Boolean> {
+    fun correctDirections(x: Int, y: Int, player: Player): List<Boolean> {
 
         if (fieldArray[x][y] == ChipValue.BLACK || fieldArray[x][y] == ChipValue.WHITE) return listOf()
 
@@ -56,16 +78,6 @@ class Field {
         return if (true in resDirections) resDirections else listOf()
     }
 
-    fun getAvailableCells(player: Player) {
-        for (i in 0 until FIELD_SIZE)
-            for (j in 0 until FIELD_SIZE) {
-                if (trueDirections(i, j, player).isNotEmpty()) {
-                    fieldArray[i][j] = ChipValue.OCCUPIABLE
-                    player.playerCanMove = true
-                }
-            }
-    }
-
     fun blackAndWhiteScore(): Pair<Int, Int> {
         var black = 0
         var white = 0
@@ -77,8 +89,10 @@ class Field {
         return black to white
     }
 
+    fun hasFreeCells(): Boolean = fieldArray.any { row -> row.any { it == ChipValue.OCCUPIABLE } }
+
     fun makeTurn(x: Int, y: Int, player: Player) {
-        val dirs = trueDirections(x, y, player)
+        val dirs = correctDirections(x, y, player)
 
         if (fieldArray[x][y] != ChipValue.OCCUPIABLE) throw IllegalArgumentException()
         if (dirs.isEmpty()) throw IllegalArgumentException()
@@ -104,8 +118,19 @@ class Field {
                     fieldArray[row][column] = ChipValue.EMPTY
 
         player.changePlayer()
+
+        for (i in 0 until FIELD_SIZE)
+            for (j in 0 until FIELD_SIZE) {
+                if (correctDirections(i, j, player).isNotEmpty()) {
+                    fieldArray[i][j] = ChipValue.OCCUPIABLE
+                    player.playerCanMove = true
+                }
+            }
+    }
+
+    companion object {
+        const val FIELD_SIZE = 8
     }
 }
 
-const val FIELD_SIZE = 8
 
