@@ -17,7 +17,7 @@ import tornadofx.View
 class View : View("Reversi") {
     private val field = Field()
 
-    private val buttons = List(8) { MutableList(8) { StackPane() } }
+    private val buttons = List(FIELD_SIZE) { MutableList(FIELD_SIZE) { StackPane() } }
     private var status: Label? = null
 
     override val root = borderpane {
@@ -46,7 +46,7 @@ class View : View("Reversi") {
                                 update()
 
                                 setOnMouseClicked {
-                                    if (field.getCell(row,column) == OCCUPIABLE)
+                                    if (field.getCell(row, column) == OCCUPIABLE)
                                         field.makeTurn(row, column)
 
                                     update()
@@ -65,7 +65,7 @@ class View : View("Reversi") {
     private fun update() {
         for (x in 0 until FIELD_SIZE)
             for (y in 0 until FIELD_SIZE) {
-                val cell = field.getCell(x,y)
+                val cell = field.getCell(x, y)
                 buttons[x][y].apply {
                     rectangle(height = cellSize, width = cellSize) {
                         fill = when (cell) {

@@ -17,6 +17,9 @@ class Field {
                 this[4][5] = ChipValue.OCCUPIABLE
             }
 
+    fun getCell(x: Int, y: Int): ChipValue = fieldArray[x][y]
+
+    fun getCurrentPlayer(): ChipValue = player.playerChip
 
     fun restart() {
         for (i in 0 until FIELD_SIZE)
@@ -36,12 +39,8 @@ class Field {
         player.playerChip = ChipValue.BLACK
     }
 
-    fun getCell(x: Int, y: Int): ChipValue = fieldArray[x][y]
-
-    fun getCurrentPlayer(): ChipValue = player.playerChip
-
-
-    private val directions = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
+    private val directions
+            = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
 
     fun correctDirections(x: Int, y: Int, player: Player): List<Boolean> {
 
@@ -61,7 +60,7 @@ class Field {
                 val dx = i + dir.second
                 val dy = j + dir.first
 
-                if (dx !in 0..7 || dy !in 0..7) break
+                if (dx !in 0 until FIELD_SIZE || dy !in 0 until FIELD_SIZE) break
                 if (fieldArray[dx][dy] == ChipValue.EMPTY || fieldArray[dx][dy] == ChipValue.OCCUPIABLE) break
 
                 if (fieldArray[dx][dy] == player.opposite()) oppositeChipsBetween++
@@ -77,19 +76,6 @@ class Field {
         }
         return if (true in resDirections) resDirections else listOf()
     }
-
-    fun blackAndWhiteScore(): Pair<Int, Int> {
-        var black = 0
-        var white = 0
-        for (i in 0 until FIELD_SIZE)
-            for (j in 0 until FIELD_SIZE) {
-                if (fieldArray[i][j] == ChipValue.BLACK) black++
-                else if (fieldArray[i][j] == ChipValue.WHITE) white++
-            }
-        return black to white
-    }
-
-    fun hasFreeCells(): Boolean = fieldArray.any { row -> row.any { it == ChipValue.OCCUPIABLE } }
 
     fun makeTurn(x: Int, y: Int) {
         val dirs = correctDirections(x, y, player)
@@ -126,6 +112,19 @@ class Field {
                     player.playerCanMove = true
                 }
             }
+    }
+
+    fun hasFreeCells(): Boolean = fieldArray.any { row -> row.any { it == ChipValue.OCCUPIABLE } }
+
+    fun blackAndWhiteScore(): Pair<Int, Int> {
+        var black = 0
+        var white = 0
+        for (i in 0 until FIELD_SIZE)
+            for (j in 0 until FIELD_SIZE) {
+                if (fieldArray[i][j] == ChipValue.BLACK) black++
+                else if (fieldArray[i][j] == ChipValue.WHITE) white++
+            }
+        return black to white
     }
 
     companion object {
