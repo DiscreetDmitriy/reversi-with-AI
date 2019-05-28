@@ -39,8 +39,7 @@ class Field {
         player.playerChip = ChipValue.BLACK
     }
 
-    private val directions
-            = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
+    private val directions = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
 
     fun correctDirections(x: Int, y: Int, player: Player): List<Boolean> {
 

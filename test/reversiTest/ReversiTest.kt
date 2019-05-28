@@ -15,13 +15,13 @@ class ReversiTest {
 
     @Test
     fun `Starting position`() {
-        assertEquals(WHITE, field.getCell(3,3))
-        assertEquals(WHITE, field.getCell(4,4))
-        assertEquals(BLACK, field.getCell(3,4))
-        assertEquals(BLACK, field.getCell(4,3))
-        assertEquals(EMPTY, field.getCell(0,0))
-        assertEquals(EMPTY, field.getCell(7,7))
-        assertThrows(ArrayIndexOutOfBoundsException::class.java) { field.getCell(-4,0 )}
+        assertEquals(WHITE, field.getCell(3, 3))
+        assertEquals(WHITE, field.getCell(4, 4))
+        assertEquals(BLACK, field.getCell(3, 4))
+        assertEquals(BLACK, field.getCell(4, 3))
+        assertEquals(EMPTY, field.getCell(0, 0))
+        assertEquals(EMPTY, field.getCell(7, 7))
+        assertThrows(ArrayIndexOutOfBoundsException::class.java) { field.getCell(-4, 0) }
         assertEquals(2 to 2, field.blackAndWhiteScore())
     }
 
@@ -73,20 +73,20 @@ class ReversiTest {
     fun `put chip`() {
         field.makeTurn(3, 2)
 
-        assertEquals(BLACK, field.getCell(3,2))
-        assertEquals(BLACK, field.getCell(3,3))
-        assertEquals(BLACK, field.getCell(4,3))
-        assertEquals(BLACK, field.getCell(3,4))
-        assertEquals(WHITE, field.getCell(4,4))
+        assertEquals(BLACK, field.getCell(3, 2))
+        assertEquals(BLACK, field.getCell(3, 3))
+        assertEquals(BLACK, field.getCell(4, 3))
+        assertEquals(BLACK, field.getCell(3, 4))
+        assertEquals(WHITE, field.getCell(4, 4))
 
         field.makeTurn(2, 2)
 
-        assertEquals(BLACK, field.getCell(3,2))
-        assertEquals(BLACK, field.getCell(4,3))
-        assertEquals(BLACK, field.getCell(3,4))
-        assertEquals(WHITE, field.getCell(2,2))
-        assertEquals(WHITE, field.getCell(3,3))
-        assertEquals(WHITE, field.getCell(4,4))
+        assertEquals(BLACK, field.getCell(3, 2))
+        assertEquals(BLACK, field.getCell(4, 3))
+        assertEquals(BLACK, field.getCell(3, 4))
+        assertEquals(WHITE, field.getCell(2, 2))
+        assertEquals(WHITE, field.getCell(3, 3))
+        assertEquals(WHITE, field.getCell(4, 4))
     }
 
     @Test
@@ -95,13 +95,13 @@ class ReversiTest {
         field.makeTurn(5, 3)
         field.makeTurn(4, 2)
 
-        assertEquals(BLACK, field.getCell(4,2))
-        assertEquals(BLACK, field.getCell(4,3))
-        assertEquals(BLACK, field.getCell(4,4))
-        assertEquals(BLACK, field.getCell(3,4))
-        assertEquals(BLACK, field.getCell(5,4))
-        assertEquals(WHITE, field.getCell(3,3))
-        assertEquals(WHITE, field.getCell(5,3))
+        assertEquals(BLACK, field.getCell(4, 2))
+        assertEquals(BLACK, field.getCell(4, 3))
+        assertEquals(BLACK, field.getCell(4, 4))
+        assertEquals(BLACK, field.getCell(3, 4))
+        assertEquals(BLACK, field.getCell(5, 4))
+        assertEquals(WHITE, field.getCell(3, 3))
+        assertEquals(WHITE, field.getCell(5, 3))
 
         field.apply { restart() }
     }

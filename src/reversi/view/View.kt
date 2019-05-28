@@ -24,11 +24,11 @@ class View : View("Reversi") {
         top {
             menubar {
                 menu("Menu") {
-                    item("Exit", "Esc").action { this@View.close() }
                     item("New game", "N").action {
                         field.restart()
                         update()
                     }
+                    item("Exit", "Esc").action { this@View.close() }
                 }
             }
         }
