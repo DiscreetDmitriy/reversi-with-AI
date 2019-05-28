@@ -13,18 +13,6 @@ import reversi.model.Player
 class ReversiTest {
     private val field = Field()
 
-    @Suppress("unused")
-    fun printField(cells: List<List<Any>>) {
-        println(cells[0])
-        println(cells[1])
-        println(cells[2])
-        println(cells[3])
-        println(cells[4])
-        println(cells[5])
-        println(cells[6])
-        println(cells[7])
-    }
-
     @Test
     fun `Starting position`() {
         assertEquals(WHITE, field.getCell(3,3))
@@ -83,8 +71,6 @@ class ReversiTest {
 
     @Test
     fun `put chip`() {
-
-        val player = Player(BLACK)
         field.makeTurn(3, 2)
 
         assertEquals(BLACK, field.getCell(3,2))
@@ -105,7 +91,6 @@ class ReversiTest {
 
     @Test
     fun `a few turns`() {
-        val p = Player(BLACK)
         field.makeTurn(5, 4)
         field.makeTurn(5, 3)
         field.makeTurn(4, 2)
