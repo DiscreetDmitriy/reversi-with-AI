@@ -47,7 +47,7 @@ class View : View("Reversi") {
 
                                 setOnMouseClicked {
                                     if (field.getCell(row,column) == OCCUPIABLE)
-                                        field.makeTurn(row, column, field.getCurrentPlayer())
+                                        field.makeTurn(row, column)
 
                                     update()
                                 }
@@ -95,7 +95,7 @@ class View : View("Reversi") {
         val score = field.blackAndWhiteScore()
         status?.text = if (field.hasFreeCells())
             "Score:  Black: ${score.first}, White: ${score.second}\t\t\t " +
-                    "Player ${if (field.getCurrentPlayer().playerChip == BLACK) "black" else "white"}'s turn"
+                    "Player ${if (field.getCurrentPlayer() == BLACK) "black" else "white"}'s turn"
         else
             "Game is finished.\t" +
                     "Winner is player ${if (score.first > score.second) "Black" else "White"}\t\t " +

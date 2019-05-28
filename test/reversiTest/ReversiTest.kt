@@ -85,7 +85,7 @@ class ReversiTest {
     fun `put chip`() {
 
         val player = Player(BLACK)
-        field.makeTurn(3, 2, player)
+        field.makeTurn(3, 2)
 
         assertEquals(BLACK, field.getCell(3,2))
         assertEquals(BLACK, field.getCell(3,3))
@@ -93,7 +93,7 @@ class ReversiTest {
         assertEquals(BLACK, field.getCell(3,4))
         assertEquals(WHITE, field.getCell(4,4))
 
-        field.makeTurn(2, 2, player)
+        field.makeTurn(2, 2)
 
         assertEquals(BLACK, field.getCell(3,2))
         assertEquals(BLACK, field.getCell(4,3))
@@ -106,9 +106,9 @@ class ReversiTest {
     @Test
     fun `a few turns`() {
         val p = Player(BLACK)
-        field.makeTurn(5, 4, p)
-        field.makeTurn(5, 3, p)
-        field.makeTurn(4, 2, p)
+        field.makeTurn(5, 4)
+        field.makeTurn(5, 3)
+        field.makeTurn(4, 2)
 
         assertEquals(BLACK, field.getCell(4,2))
         assertEquals(BLACK, field.getCell(4,3))

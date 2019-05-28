@@ -38,7 +38,7 @@ class Field {
 
     fun getCell(x: Int, y: Int): ChipValue = fieldArray[x][y]
 
-    fun getCurrentPlayer(): Player = player
+    fun getCurrentPlayer(): ChipValue = player.playerChip
 
 
     private val directions = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
@@ -91,7 +91,7 @@ class Field {
 
     fun hasFreeCells(): Boolean = fieldArray.any { row -> row.any { it == ChipValue.OCCUPIABLE } }
 
-    fun makeTurn(x: Int, y: Int, player: Player) {
+    fun makeTurn(x: Int, y: Int) {
         val dirs = correctDirections(x, y, player)
 
         if (fieldArray[x][y] != ChipValue.OCCUPIABLE) throw IllegalArgumentException()
