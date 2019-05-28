@@ -53,7 +53,7 @@ class GrepTest {
         assertFileContent(
             "grepFiles/output.txt", """b 2
                 |c 3
-                |windowSize 4
+                |WINDOW_SIZE 4
                 |A 5
             """.trimMargin()
         )
@@ -66,7 +66,7 @@ class GrepTest {
         assertFileContent(
             "grepFiles/output.txt",
             """c 3
-            |windowSize 4
+            |WINDOW_SIZE 4
             |A 5""".trimMargin()
         )
     }
@@ -78,7 +78,7 @@ class GrepTest {
             "grepFiles/output.txt",
             """b 2
             |c 3
-            |windowSize 4""".trimMargin()
+            |WINDOW_SIZE 4""".trimMargin()
         )
     }
 
@@ -95,7 +95,7 @@ class GrepTest {
             "grepFiles/output.txt",
             """b 2
             |c 3
-            |windowSize 4""".trimMargin()
+            |WINDOW_SIZE 4""".trimMargin()
         )
     }
 

@@ -7,10 +7,10 @@ import javafx.scene.paint.Color
 import reversi.model.ChipValue.*
 import reversi.model.Field
 import reversi.model.Field.Companion.FIELD_SIZE
-import reversi.view.Styles.Companion.cellSize
-import reversi.view.Styles.Companion.chipRadius
+import reversi.view.Styles.Companion.CELL_SIZE
+import reversi.view.Styles.Companion.CHIP_RADIUS
 import reversi.view.Styles.Companion.rec
-import reversi.view.Styles.Companion.windowSize
+import reversi.view.Styles.Companion.WINDOW_SIZE
 import tornadofx.*
 import tornadofx.View
 
@@ -35,8 +35,8 @@ class View : View("Reversi") {
         center {
             gridpane {
                 alignment = Pos.CENTER
-                prefHeight = windowSize
-                prefWidth = windowSize
+                prefHeight = WINDOW_SIZE
+                prefWidth = WINDOW_SIZE
 
                 for (row in 0 until FIELD_SIZE)
                     row {
@@ -67,27 +67,20 @@ class View : View("Reversi") {
             for (y in 0 until FIELD_SIZE) {
                 val cell = field.getCell(x, y)
                 buttons[x][y].apply {
-                    rectangle(height = cellSize, width = cellSize) {
-                        fill = when (cell) {
-                            BLACK -> {
-                                circle(radius = chipRadius) { fill = Color.BLACK }
-                                Color.WHITE
+                    rectangle(height = CELL_SIZE, width = CELL_SIZE) {
+                        when (cell) {
+                            BLACK -> circle(radius = CHIP_RADIUS) { fill = Color.BLACK }
+                            WHITE -> circle(radius = CHIP_RADIUS) { fill = Color.ANTIQUEWHITE }
+                            EMPTY -> {
                             }
-                            WHITE -> {
-                                circle(radius = chipRadius) { fill = Color.ANTIQUEWHITE }
-                                Color.WHITE
-                            }
-                            EMPTY -> Color.WHITE
-                            OCCUPIABLE -> {
-                                parent.onHover { hovering ->
-                                    fillProperty().animate(
-                                        if (hovering) Color.LIGHTGREEN else Color.WHITE,
-                                        100.millis
-                                    )
-                                }
-                                Color.WHITE
+                            OCCUPIABLE -> parent.onHover { hovering ->
+                                fillProperty().animate(
+                                    if (hovering) Color.LIGHTGREEN else Color.WHITE,
+                                    100.millis
+                                )
                             }
                         }
+                        fill = Color.WHITE
                     }
                 }
             }
