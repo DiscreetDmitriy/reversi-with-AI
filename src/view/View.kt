@@ -69,18 +69,25 @@ class View : View("Reversi") {
                 buttons[x][y].apply {
                     rectangle(height = CELL_SIZE, width = CELL_SIZE) {
                         when (cell) {
-                            BLACK -> circle(radius = CHIP_RADIUS) { fill = Color.BLACK }
-                            WHITE -> circle(radius = CHIP_RADIUS) { fill = Color.ANTIQUEWHITE }
-                            EMPTY -> {
+                            BLACK -> circle(radius = CHIP_RADIUS) {
+                                this@rectangle.fill = Color.WHITE
+                                fill = Color.BLACK
                             }
-                            OCCUPIABLE -> parent.onHover { hovering ->
-                                fillProperty().animate(
-                                    if (hovering) Color.LIGHTGREEN else Color.WHITE,
-                                    100.millis
-                                )
+                            WHITE -> circle(radius = CHIP_RADIUS) {
+                                this@rectangle.fill = Color.WHITE
+                                fill = Color.ANTIQUEWHITE
+                            }
+                            EMPTY -> { this@rectangle.fill = Color.WHITE }
+                            OCCUPIABLE -> {
+                                this.fill = Color.LIGHTGREEN
+                                parent.onHover { hovering ->
+                                    opacityProperty().animate(
+                                        if (hovering) 0.6 else 1.0,
+                                        100.millis
+                                    )
+                                }
                             }
                         }
-                        fill = Color.WHITE
                     }
                 }
             }
