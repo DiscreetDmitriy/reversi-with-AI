@@ -1,4 +1,4 @@
-package reversi.model
+package model
 
 class Field {
 

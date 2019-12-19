@@ -1,13 +1,11 @@
-package reversiTest
-
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import reversi.model.ChipValue.*
-import reversi.model.Field
-import reversi.model.Player
+import model.ChipValue.*
+import model.Field
+import model.Player
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ReversiTest {

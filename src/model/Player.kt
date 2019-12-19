@@ -1,4 +1,4 @@
-package reversi.model
+package model
 
 data class Player(var playerChip: ChipValue) {
     var playerCanMove = false

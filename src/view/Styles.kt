@@ -1,4 +1,4 @@
-package reversi.view
+package view
 
 import javafx.scene.paint.Color
 import tornadofx.*

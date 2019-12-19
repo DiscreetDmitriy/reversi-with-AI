@@ -1,16 +1,16 @@
-package reversi.view
+package view
 
 import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
-import reversi.model.ChipValue.*
-import reversi.model.Field
-import reversi.model.Field.Companion.FIELD_SIZE
-import reversi.view.Styles.Companion.CELL_SIZE
-import reversi.view.Styles.Companion.CHIP_RADIUS
-import reversi.view.Styles.Companion.rec
-import reversi.view.Styles.Companion.WINDOW_SIZE
+import model.ChipValue.*
+import model.Field
+import model.Field.Companion.FIELD_SIZE
+import view.Styles.Companion.CELL_SIZE
+import view.Styles.Companion.CHIP_RADIUS
+import view.Styles.Companion.rec
+import view.Styles.Companion.WINDOW_SIZE
 import tornadofx.*
 import tornadofx.View
 
