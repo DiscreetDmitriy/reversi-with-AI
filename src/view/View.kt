@@ -1,5 +1,6 @@
 package view
 
+import javafx.event.ActionEvent
 import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.layout.StackPane
@@ -13,6 +14,7 @@ import view.Styles.Companion.rec
 import view.Styles.Companion.WINDOW_SIZE
 import tornadofx.*
 import tornadofx.View
+import java.util.*
 
 class View : View("Reversi") {
     private val field = Field()
