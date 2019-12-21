@@ -1,7 +1,6 @@
 package model
 
-import model.Chip.BLACK
-import model.Chip.WHITE
+import model.Chip.*
 import model.ai.AIPlayer
 import model.ai.Evaluator
 import model.ai.Player
@@ -12,28 +11,47 @@ class Field {
     private val playerAI = AIPlayer(WHITE, 3, Evaluator())
 
     private val fieldArray =
-        List(FIELD_SIZE) { MutableList(FIELD_SIZE) { Chip.EMPTY } }
+        List(FIELD_SIZE) { MutableList(FIELD_SIZE) { EMPTY } }
             .apply {
                 this[3][3] = WHITE
                 this[4][4] = WHITE
                 this[3][4] = BLACK
                 this[4][3] = BLACK
 
-                this[3][2] = Chip.OCCUPIABLE
-                this[2][3] = Chip.OCCUPIABLE
-                this[5][4] = Chip.OCCUPIABLE
-                this[4][5] = Chip.OCCUPIABLE
+                this[3][2] = OCCUPIABLE
+                this[2][3] = OCCUPIABLE
+                this[5][4] = OCCUPIABLE
+                this[4][5] = OCCUPIABLE
             }
+
+    fun restart() {
+        for (i in 0 until FIELD_SIZE)
+            for (j in 0 until FIELD_SIZE)
+                fieldArray[i][j] = EMPTY
+
+        fieldArray[3][3] = WHITE
+        fieldArray[4][4] = WHITE
+        fieldArray[3][4] = BLACK
+        fieldArray[4][3] = BLACK
+
+        fieldArray[3][2] = OCCUPIABLE
+        fieldArray[2][3] = OCCUPIABLE
+        fieldArray[5][4] = OCCUPIABLE
+        fieldArray[4][5] = OCCUPIABLE
+
+        playerHuman.canMove = true
+    }
 
     fun chip(x: Int, y: Int): Chip = fieldArray[x][y]
 
-    fun currentPlayer(): Player =
-        if (playerHuman.canMove)
+    fun currentPlayer(): Player {
+        return if (playerHuman.canMove)
             playerHuman
         else
             playerAI
+    }
 
-    private fun changeTurn() =
+    private fun changeTurn() {
         if (playerHuman.canMove) {
             playerHuman.canMove = false
             playerAI.canMove = true
@@ -41,23 +59,16 @@ class Field {
             playerHuman.canMove = true
             playerAI.canMove = false
         }
+    }
 
-    fun restart() {
-        for (i in 0 until FIELD_SIZE)
-            for (j in 0 until FIELD_SIZE)
-                fieldArray[i][j] = Chip.EMPTY
+    fun getOccupiableCells(): List<Pair<Int, Int>> {
+        val occupiable = mutableListOf<Pair<Int, Int>>()
+        for (x in 0 until FIELD_SIZE)
+            for (y in 0 until FIELD_SIZE)
+                if (fieldArray[x][y] == OCCUPIABLE)
+                    occupiable += x to y
 
-        fieldArray[3][3] = WHITE
-        fieldArray[4][4] = WHITE
-        fieldArray[3][4] = BLACK
-        fieldArray[4][3] = BLACK
-
-        fieldArray[3][2] = Chip.OCCUPIABLE
-        fieldArray[2][3] = Chip.OCCUPIABLE
-        fieldArray[5][4] = Chip.OCCUPIABLE
-        fieldArray[4][5] = Chip.OCCUPIABLE
-
-        playerHuman.canMove = true
+        return occupiable
     }
 
     private val directions = listOf(
@@ -87,8 +98,8 @@ class Field {
 
                 if (dx !in 0 until FIELD_SIZE ||
                     dy !in 0 until FIELD_SIZE ||
-                    fieldArray[dx][dy] == Chip.EMPTY ||
-                    fieldArray[dx][dy] == Chip.OCCUPIABLE
+                    fieldArray[dx][dy] == EMPTY ||
+                    fieldArray[dx][dy] == OCCUPIABLE
                 ) break
 
                 if (fieldArray[dx][dy] == player.oppositeChip()) {
@@ -109,7 +120,7 @@ class Field {
     fun makeTurn(x: Int, y: Int, player: Player) {
         val dirs = correctDirections(x, y, player)
 
-        if (fieldArray[x][y] != Chip.OCCUPIABLE || dirs.isEmpty())
+        if (fieldArray[x][y] != OCCUPIABLE || dirs.isEmpty())
             throw IllegalArgumentException()
 
         fieldArray[x][y] = player.chip
@@ -129,19 +140,19 @@ class Field {
 
         for (row in 0 until FIELD_SIZE)
             for (column in 0 until FIELD_SIZE)
-                if (fieldArray[row][column] == Chip.OCCUPIABLE)
-                    fieldArray[row][column] = Chip.EMPTY
+                if (fieldArray[row][column] == OCCUPIABLE)
+                    fieldArray[row][column] = EMPTY
 
         changeTurn()
 
         for (i in 0 until FIELD_SIZE)
             for (j in 0 until FIELD_SIZE)
                 if (correctDirections(i, j, currentPlayer()).isNotEmpty())
-                    fieldArray[i][j] = Chip.OCCUPIABLE
+                    fieldArray[i][j] = OCCUPIABLE
     }
 
     fun isNotOver(): Boolean = fieldArray.any { row ->
-        row.any { it == Chip.OCCUPIABLE }
+        row.any { it == OCCUPIABLE }
     }
 
     fun score(): Pair<Int, Int> {

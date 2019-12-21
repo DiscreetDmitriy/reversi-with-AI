@@ -12,7 +12,5 @@ abstract class Player(internal open val chip: Chip) {
         else
             Chip.BLACK
 
-    abstract fun isHuman(): Boolean
-
     abstract fun play(board: List<List<Chip>>): Pair<Int, Int>
 }

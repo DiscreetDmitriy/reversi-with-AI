@@ -8,10 +8,6 @@ data class AIPlayer(
     val evaluator: Evaluator
 ) : Player(chip) {
 
-    override fun isHuman(): Boolean {
-        return false
-    }
-
     override fun play(board: List<List<Chip>>): Pair<Int, Int> {
         return MiniMax.solve(board, chip, depth, evaluator)
     }
