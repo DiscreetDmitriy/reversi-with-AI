@@ -98,14 +98,14 @@ class View : View("Reversi") {
     }
 
     private fun updateScore() {
-        val score = field.score()
+        val (black, white) = field.score()
         status?.text = if (field.isNotOver())
-            "Score:  Black: ${score.first}, White: ${score.second}\t\t\t " +
+            "Score:  Black: $black, White: $white\t\t\t " +
                     "Player ${if (field.currentPlayer().chip == BLACK) "black" else "white"}'s turn"
         else
             "Game is finished.\t" +
-                    "Winner is player ${if (score.first > score.second) "Black" else "White"}\t\t " +
-                    "Score:  Black: ${score.first}, White: ${score.second}"
+                    "Winner is player ${if (black > white) "Black" else "White"}\t\t " +
+                    "Score:  Black: $black, White: $white"
 
     }
 }

@@ -12,10 +12,6 @@ data class AIPlayer(
         return false
     }
 
-    override fun playerName(): String {
-        return "AIPlayer(depth: $depth)"
-    }
-
     override fun play(board: List<List<Chip>>): Pair<Int, Int> {
         return MiniMax.solve(board, chip, depth, evaluator)
     }
