@@ -51,7 +51,8 @@ class View : View("Reversi") {
                                     if (field.getCell(row, column) == OCCUPIABLE)
                                         field.makeTurn(row, column)
 
-                                    update()
+                                    updateScore()
+                                    repaint()
                                 }
                             }
                             buttons[row][column] = button
@@ -64,8 +65,8 @@ class View : View("Reversi") {
         }
     }
 
-    private fun update() {
-        for (x in 0 until FIELD_SIZE)
+    private fun repaint() {
+        for (x in 0 until FIELD_SIZE) {
             for (y in 0 until FIELD_SIZE) {
                 val cell = field.getCell(x, y)
                 buttons[x][y].apply {
@@ -79,7 +80,9 @@ class View : View("Reversi") {
                                 this@rectangle.fill = Color.WHITE
                                 fill = Color.ANTIQUEWHITE
                             }
-                            EMPTY -> { this@rectangle.fill = Color.WHITE }
+                            EMPTY -> {
+                                this@rectangle.fill = Color.WHITE
+                            }
                             OCCUPIABLE -> {
                                 this.fill = Color.LIGHTGREEN
                                 parent.onHover { hovering ->
@@ -93,15 +96,19 @@ class View : View("Reversi") {
                     }
                 }
             }
+        }
+    }
 
-        val score = field.blackAndWhiteScore()
-        status?.text = if (field.hasFreeCells())
+    private fun updateScore() {
+        val score = field.score()
+        status?.text = if (field.isNotOver())
             "Score:  Black: ${score.first}, White: ${score.second}\t\t\t " +
                     "Player ${if (field.getCurrentPlayer() == BLACK) "black" else "white"}'s turn"
         else
             "Game is finished.\t" +
                     "Winner is player ${if (score.first > score.second) "Black" else "White"}\t\t " +
                     "Score:  Black: ${score.first}, White: ${score.second}"
+
     }
 }
 
