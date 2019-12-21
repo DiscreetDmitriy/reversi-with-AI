@@ -1,11 +1,11 @@
+import model.Chip.*
+import model.Field
+import model.HumanPlayer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import model.ChipValue.*
-import model.Field
-import model.Player
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ReversiTest {
@@ -13,14 +13,14 @@ class ReversiTest {
 
     @Test
     fun `Starting position`() {
-        assertEquals(WHITE, field.getCell(3, 3))
-        assertEquals(WHITE, field.getCell(4, 4))
-        assertEquals(BLACK, field.getCell(3, 4))
-        assertEquals(BLACK, field.getCell(4, 3))
-        assertEquals(EMPTY, field.getCell(0, 0))
-        assertEquals(EMPTY, field.getCell(7, 7))
-        assertThrows(ArrayIndexOutOfBoundsException::class.java) { field.getCell(-4, 0) }
-        assertEquals(2 to 2, field.blackAndWhiteScore())
+        assertEquals(WHITE, field.chip(3, 3))
+        assertEquals(WHITE, field.chip(4, 4))
+        assertEquals(BLACK, field.chip(3, 4))
+        assertEquals(BLACK, field.chip(4, 3))
+        assertEquals(EMPTY, field.chip(0, 0))
+        assertEquals(EMPTY, field.chip(7, 7))
+        assertThrows(ArrayIndexOutOfBoundsException::class.java) { field.chip(-4, 0) }
+        assertEquals(2 to 2, field.score())
     }
 
     @Nested
@@ -30,76 +30,76 @@ class ReversiTest {
             field.restart()
             assertEquals(
                 listOf(false, false, false, false, true, false, false, false),
-                field.correctDirections(2, 4, Player(WHITE))
+                field.correctDirections(2, 4, HumanPlayer(WHITE))
             )
             assertEquals(
                 listOf(false, true, false, false, false, false, false, false),
-                field.correctDirections(3, 5, Player(WHITE))
+                field.correctDirections(3, 5, HumanPlayer(WHITE))
             )
             assertEquals(
                 listOf(false, false, false, false, false, false, true, false),
-                field.correctDirections(4, 2, Player(WHITE))
+                field.correctDirections(4, 2, HumanPlayer(WHITE))
             )
             assertEquals(
                 listOf(false, false, false, true, false, false, false, false),
-                field.correctDirections(5, 3, Player(WHITE))
+                field.correctDirections(5, 3, HumanPlayer(WHITE))
             )
             assertEquals(
                 listOf(false, false, false, false, false, false, true, false),
-                field.correctDirections(3, 2, Player(BLACK))
+                field.correctDirections(3, 2, HumanPlayer(BLACK))
             )
             assertEquals(
                 listOf(false, false, false, false, true, false, false, false),
-                field.correctDirections(2, 3, Player(BLACK))
+                field.correctDirections(2, 3, HumanPlayer(BLACK))
             )
             assertEquals(
                 listOf(false, true, false, false, false, false, false, false),
-                field.correctDirections(4, 5, Player(BLACK))
+                field.correctDirections(4, 5, HumanPlayer(BLACK))
             )
             assertEquals(
                 listOf(false, false, false, true, false, false, false, false),
-                field.correctDirections(5, 4, Player(BLACK))
+                field.correctDirections(5, 4, HumanPlayer(BLACK))
             )
         }
 
         @Test
         fun `on the chip`() =
-            assertEquals(listOf<Boolean>(), field.correctDirections(3, 4, Player(BLACK)))
+            assertEquals(listOf<Boolean>(), field.correctDirections(3, 4, HumanPlayer(BLACK)))
     }
 
     @Test
     fun `put chip`() {
-        field.makeTurn(3, 2)
+        field.makeTurn(3, 2,field.currentPlayer())
 
-        assertEquals(BLACK, field.getCell(3, 2))
-        assertEquals(BLACK, field.getCell(3, 3))
-        assertEquals(BLACK, field.getCell(4, 3))
-        assertEquals(BLACK, field.getCell(3, 4))
-        assertEquals(WHITE, field.getCell(4, 4))
+        assertEquals(BLACK, field.chip(3, 2))
+        assertEquals(BLACK, field.chip(3, 3))
+        assertEquals(BLACK, field.chip(4, 3))
+        assertEquals(BLACK, field.chip(3, 4))
+        assertEquals(WHITE, field.chip(4, 4))
 
-        field.makeTurn(2, 2)
+        field.makeTurn(2, 2, field.currentPlayer())
 
-        assertEquals(BLACK, field.getCell(3, 2))
-        assertEquals(BLACK, field.getCell(4, 3))
-        assertEquals(BLACK, field.getCell(3, 4))
-        assertEquals(WHITE, field.getCell(2, 2))
-        assertEquals(WHITE, field.getCell(3, 3))
-        assertEquals(WHITE, field.getCell(4, 4))
+        assertEquals(BLACK, field.chip(3, 2))
+        assertEquals(BLACK, field.chip(4, 3))
+        assertEquals(BLACK, field.chip(3, 4))
+        assertEquals(WHITE, field.chip(2, 2))
+        assertEquals(WHITE, field.chip(3, 3))
+        assertEquals(WHITE, field.chip(4, 4))
     }
 
     @Test
     fun `a few turns`() {
-        field.makeTurn(5, 4)
-        field.makeTurn(5, 3)
-        field.makeTurn(4, 2)
+        field.makeTurn(5, 4,field.currentPlayer())
+        field.makeTurn(5, 3,field.currentPlayer())
+        field.makeTurn(4, 2,field.currentPlayer())
 
-        assertEquals(BLACK, field.getCell(4, 2))
-        assertEquals(BLACK, field.getCell(4, 3))
-        assertEquals(BLACK, field.getCell(4, 4))
-        assertEquals(BLACK, field.getCell(3, 4))
-        assertEquals(BLACK, field.getCell(5, 4))
-        assertEquals(WHITE, field.getCell(3, 3))
-        assertEquals(WHITE, field.getCell(5, 3))
+        assertEquals(BLACK, field.chip(4, 2))
+        assertEquals(BLACK, field.chip(4, 3))
+        assertEquals(BLACK, field.chip(4, 4))
+        assertEquals(BLACK, field.chip(3, 4))
+        assertEquals(BLACK, field.chip(5, 4))
+        assertEquals(WHITE, field.chip(3, 3))
+        assertEquals(WHITE, field.chip(5, 3))
 
         field.apply { restart() }
     }

@@ -9,7 +9,7 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile 'org.junit.jupiter:junit-jupiter-api:5.5.0-M1'
-    compile 'no.tornado:tornadofx:1.7.18'
+    compile 'no.tornado:tornadofx:1.7.19'
 }
 
 compileKotlin { kotlinOptions.jvmTarget = "1.8" }
