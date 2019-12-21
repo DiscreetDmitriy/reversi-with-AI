@@ -1,6 +1,6 @@
 package model
 
-enum class ChipValue {
+enum class Chip {
     BLACK,
     WHITE,
     EMPTY,
