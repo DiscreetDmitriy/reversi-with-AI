@@ -1,20 +1,18 @@
 package view
 
-import javafx.event.ActionEvent
 import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
-import model.ChipValue.*
+import model.Chip.*
 import model.Field
 import model.Field.Companion.FIELD_SIZE
 import view.Styles.Companion.CELL_SIZE
 import view.Styles.Companion.CHIP_RADIUS
-import view.Styles.Companion.rec
 import view.Styles.Companion.WINDOW_SIZE
+import view.Styles.Companion.rec
 import tornadofx.*
 import tornadofx.View
-import java.util.*
 
 class View : View("Reversi") {
     private val field = Field()
@@ -28,7 +26,7 @@ class View : View("Reversi") {
                 menu("Menu") {
                     item("New game", "N").action {
                         field.restart()
-                        update()
+                        repaint()
                     }
                     item("Exit", "Esc").action { this@View.close() }
                 }
@@ -45,11 +43,11 @@ class View : View("Reversi") {
                         for (column in 0 until FIELD_SIZE) {
                             val button = stackpane {
                                 addClass(rec)
-                                update()
+                                repaint()
 
                                 setOnMouseClicked {
-                                    if (field.getCell(row, column) == OCCUPIABLE)
-                                        field.makeTurn(row, column)
+                                    if (field.chip(row, column) == OCCUPIABLE)
+                                        field.makeTurn(row, column, field.currentPlayer())
 
                                     updateScore()
                                     repaint()
@@ -68,7 +66,7 @@ class View : View("Reversi") {
     private fun repaint() {
         for (x in 0 until FIELD_SIZE) {
             for (y in 0 until FIELD_SIZE) {
-                val cell = field.getCell(x, y)
+                val cell = field.chip(x, y)
                 buttons[x][y].apply {
                     rectangle(height = CELL_SIZE, width = CELL_SIZE) {
                         when (cell) {
@@ -103,7 +101,7 @@ class View : View("Reversi") {
         val score = field.score()
         status?.text = if (field.isNotOver())
             "Score:  Black: ${score.first}, White: ${score.second}\t\t\t " +
-                    "Player ${if (field.getCurrentPlayer() == BLACK) "black" else "white"}'s turn"
+                    "Player ${if (field.currentPlayer().chip == BLACK) "black" else "white"}'s turn"
         else
             "Game is finished.\t" +
                     "Winner is player ${if (score.first > score.second) "Black" else "White"}\t\t " +
