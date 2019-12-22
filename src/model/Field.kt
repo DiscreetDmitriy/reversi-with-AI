@@ -120,6 +120,20 @@ class Field {
 
         fieldArray[x][y] = player.chip
 
+        flipOtherChips(x, y, dirs, player)
+        clearOccupiableChips()
+        changeTurn()
+        findOccupiable()
+    }
+
+    private fun findOccupiable() {
+        for (i in 0 until FIELD_SIZE)
+            for (j in 0 until FIELD_SIZE)
+                if (correctDirections(i, j, currentPlayer()).isNotEmpty())
+                    fieldArray[i][j] = OCCUPIABLE
+    }
+
+    private fun flipOtherChips(x: Int, y: Int, dirs: List<Boolean>, player: Player) {
         for (dir in directions) {
             var i = x
             var j = y
@@ -132,18 +146,13 @@ class Field {
                 j += dir.first
             }
         }
+    }
 
+    private fun clearOccupiableChips() {
         for (row in 0 until FIELD_SIZE)
             for (column in 0 until FIELD_SIZE)
                 if (fieldArray[row][column] == OCCUPIABLE)
                     fieldArray[row][column] = EMPTY
-
-        changeTurn()
-
-        for (i in 0 until FIELD_SIZE)
-            for (j in 0 until FIELD_SIZE)
-                if (correctDirections(i, j, currentPlayer()).isNotEmpty())
-                    fieldArray[i][j] = OCCUPIABLE
     }
 
     fun isNotOver(): Boolean = fieldArray.any { row ->
