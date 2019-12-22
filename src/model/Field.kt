@@ -7,8 +7,9 @@ import model.ai.Player
 
 class Field {
 
-    private val playerHuman = HumanPlayer(BLACK).apply { canMove = true }
+    private val playerHuman = HumanPlayer(BLACK)
     private val playerAI = AIPlayer(WHITE, 3, Evaluator())
+    private var humanTurn = true
 
     private val fieldArray =
         List(FIELD_SIZE) { MutableList(FIELD_SIZE) { EMPTY } }
@@ -39,26 +40,20 @@ class Field {
         fieldArray[5][4] = OCCUPIABLE
         fieldArray[4][5] = OCCUPIABLE
 
-        playerHuman.canMove = true
+        humanTurn = true
     }
 
     fun chip(x: Int, y: Int): Chip = fieldArray[x][y]
 
     fun currentPlayer(): Player {
-        return if (playerHuman.canMove)
+        return if (humanTurn)
             playerHuman
         else
             playerAI
     }
 
     private fun changeTurn() {
-        if (playerHuman.canMove) {
-            playerHuman.canMove = false
-            playerAI.canMove = true
-        } else {
-            playerHuman.canMove = true
-            playerAI.canMove = false
-        }
+        humanTurn = !humanTurn
     }
 
     fun getOccupiableCells(): List<Pair<Int, Int>> {

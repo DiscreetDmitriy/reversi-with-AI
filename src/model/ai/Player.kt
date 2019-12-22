@@ -4,8 +4,6 @@ import model.Chip
 
 abstract class Player(internal open val chip: Chip) {
 
-    internal var canMove = false
-
     fun oppositeChip(): Chip =
         if (chip == Chip.BLACK)
             Chip.WHITE
