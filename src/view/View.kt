@@ -7,12 +7,12 @@ import javafx.scene.paint.Color
 import model.Chip.*
 import model.Field
 import model.Field.Companion.FIELD_SIZE
+import tornadofx.*
+import tornadofx.View
 import view.Styles.Companion.CELL_SIZE
 import view.Styles.Companion.CHIP_RADIUS
 import view.Styles.Companion.WINDOW_SIZE
 import view.Styles.Companion.rec
-import tornadofx.*
-import tornadofx.View
 
 class View : View("Reversi") {
     private val field = Field()
@@ -26,6 +26,7 @@ class View : View("Reversi") {
                 menu("Menu") {
                     item("New game", "N").action {
                         field.restart()
+                        updateScore()
                         repaint()
                     }
                     item("Exit", "Esc").action { this@View.close() }
@@ -84,8 +85,11 @@ class View : View("Reversi") {
                             OCCUPIABLE -> {
                                 this.fill = Color.LIGHTGREEN
                                 parent.onHover { hovering ->
-                                    opacityProperty().animate(
-                                        if (hovering) 0.6 else 1.0,
+                                    fillProperty().animate(
+                                        if (hovering)
+                                            Color.rgb(188, 244, 188)
+                                        else
+                                            Color.LIGHTGREEN,
                                         100.millis
                                     )
                                 }
