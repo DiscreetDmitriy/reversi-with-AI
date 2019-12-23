@@ -9,7 +9,8 @@ data class AIPlayer(
 ) : Player(chip) {
 
     override fun play(board: List<List<Chip>>): Pair<Int, Int> {
-        return MiniMax.solve(board, chip, depth, evaluator)
+//        return MiniMax.solve(board, chip, depth, evaluator)
+        return 4 to 2
     }
 
 }

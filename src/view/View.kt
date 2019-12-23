@@ -46,9 +46,18 @@ class View : View("Reversi") {
                                 addClass(rec)
                                 repaint()
 
-                                setOnMouseClicked {
-                                    if (field.chip(row, column) == OCCUPIABLE)
+                                if (field.humanTurn)
+                                    setOnMouseClicked {
                                         field.makeTurn(row, column, field.currentPlayer())
+
+                                        updateScore()
+                                        repaint()
+                                    }
+                                else {
+                                    val (x, y) =
+                                        field.currentPlayer().play(field.board())
+
+                                    field.makeTurn(x, y, field.currentPlayer())
 
                                     updateScore()
                                     repaint()
@@ -70,17 +79,15 @@ class View : View("Reversi") {
                 val cell = field.chip(x, y)
                 buttons[x][y].apply {
                     rectangle(height = CELL_SIZE, width = CELL_SIZE) {
+                        this.fill = Color.WHITE
                         when (cell) {
                             BLACK -> circle(radius = CHIP_RADIUS) {
-                                this@rectangle.fill = Color.WHITE
                                 fill = Color.BLACK
                             }
                             WHITE -> circle(radius = CHIP_RADIUS) {
-                                this@rectangle.fill = Color.WHITE
                                 fill = Color.ANTIQUEWHITE
                             }
                             EMPTY -> {
-                                this@rectangle.fill = Color.WHITE
                             }
                             OCCUPIABLE -> {
                                 this.fill = Color.LIGHTGREEN
