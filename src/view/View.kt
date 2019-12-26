@@ -13,6 +13,7 @@ import view.Styles.Companion.CELL_SIZE
 import view.Styles.Companion.CHIP_RADIUS
 import view.Styles.Companion.WINDOW_SIZE
 import view.Styles.Companion.rec
+import java.util.*
 
 class View : View("Reversi") {
     private val field = Field()
@@ -39,33 +40,25 @@ class View : View("Reversi") {
                 prefHeight = WINDOW_SIZE
                 prefWidth = WINDOW_SIZE
 
-                for (row in 0 until FIELD_SIZE)
+                for (row in 0 until FIELD_SIZE) {
                     row {
                         for (column in 0 until FIELD_SIZE) {
                             val button = stackpane {
                                 addClass(rec)
                                 repaint()
 
-                                if (field.humanTurn)
-                                    setOnMouseClicked {
-                                        field.makeTurn(row, column, field.currentPlayer())
+                                setOnMouseClicked {
+                                    if (field.board()[row][column] == OCCUPIABLE) {
+                                        firstPlayerTurn(row, column)
 
-                                        updateScore()
-                                        repaint()
+                                        secondPlayerTurn()
                                     }
-                                else {
-                                    val (x, y) =
-                                        field.currentPlayer().play(field.board())
-
-                                    field.makeTurn(x, y, field.currentPlayer())
-
-                                    updateScore()
-                                    repaint()
                                 }
                             }
                             buttons[row][column] = button
                         }
                     }
+                }
             }
         }
         bottom {
@@ -73,13 +66,35 @@ class View : View("Reversi") {
         }
     }
 
+    private fun firstPlayerTurn(row: Int, column: Int) {
+        field.makeTurn(row, column, field.currentPlayer())
+
+        updateScore()
+        repaint()
+    }
+
+    private fun secondPlayerTurn() {
+        val timer = Timer("TimerBetweenTurns", true)
+        val task = FXTimerTask(
+                {
+                    val (x, y) = field.currentPlayer().play(field.board())
+                    field.makeTurn(x, y, field.currentPlayer())
+                    updateScore()
+                    repaint()
+                }
+                , timer)
+
+        timer.schedule(task, 1000)
+    }
+
     private fun repaint() {
         for (x in 0 until FIELD_SIZE) {
             for (y in 0 until FIELD_SIZE) {
                 val cell = field.chip(x, y)
                 buttons[x][y].apply {
+                    clear()
                     rectangle(height = CELL_SIZE, width = CELL_SIZE) {
-                        this.fill = Color.WHITE
+                        fill = Color.WHITE
                         when (cell) {
                             BLACK -> circle(radius = CHIP_RADIUS) {
                                 fill = Color.BLACK
@@ -90,15 +105,14 @@ class View : View("Reversi") {
                             EMPTY -> {
                             }
                             OCCUPIABLE -> {
-                                this.fill = Color.LIGHTGREEN
-                                parent.onHover { hovering ->
-                                    fillProperty().animate(
-                                        if (hovering)
-                                            Color.rgb(188, 244, 188)
-                                        else
-                                            Color.LIGHTGREEN,
-                                        100.millis
-                                    )
+                                fill = Color.LIGHTGREEN
+                                if (field.humanTurn) {
+                                    parent.onHover { hovering ->
+                                        opacityProperty().animate(
+                                                if (hovering) 0.6 else 1.0,
+                                                100.millis
+                                        )
+                                    }
                                 }
                             }
                         }
