@@ -1,6 +1,7 @@
 package model.ai
 
 import model.Chip
+import model.Field
 
 data class AIPlayer(
     override var chip: Chip,
@@ -8,9 +9,8 @@ data class AIPlayer(
     val evaluator: Evaluator
 ) : Player(chip) {
 
-    override fun play(board: List<List<Chip>>): Pair<Int, Int> {
-//        return MiniMax.solve(board, chip, depth, evaluator)
-        return 4 to 2
+    override fun play(field: Field): Pair<Int, Int> {
+        return MiniMax.solve(field, depth, evaluator)
     }
 
 }

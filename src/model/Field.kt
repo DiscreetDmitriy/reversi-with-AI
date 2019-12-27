@@ -7,12 +7,12 @@ import model.ai.Player
 
 class Field {
 
-    private val playerHuman = HumanPlayer(BLACK)
-    private val playerAI = AIPlayer(WHITE, 3, Evaluator())
+    val playerHuman = HumanPlayer(BLACK)
+    val playerAI = AIPlayer(WHITE, 3, Evaluator(this))
     var humanTurn = true
-        private set
+        internal set
 
-    private val board =
+    val board =
         List(FIELD_SIZE) { MutableList(FIELD_SIZE) { EMPTY } }
             .apply {
                 this[3][3] = WHITE
@@ -114,7 +114,6 @@ class Field {
             return
 
         board[x][y] = player.chip
-        println(x to y)
 
         flipOtherChips(x, y, dirs, player)
         clearOccupiableChips()
@@ -152,6 +151,17 @@ class Field {
                     board[i][j] = OCCUPIABLE
                     list += i to j
                 }
+
+        return list
+    }
+
+    fun occupiable(player: Player): List<Pair<Int, Int>> {
+        val list = mutableListOf<Pair<Int, Int>>()
+
+        for (i in 0 until FIELD_SIZE)
+            for (j in 0 until FIELD_SIZE)
+                if (correctDirections(i, j, player).isNotEmpty())
+                    list += i to j
 
         return list
     }

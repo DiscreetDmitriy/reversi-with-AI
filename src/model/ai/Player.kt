@@ -1,6 +1,7 @@
 package model.ai
 
 import model.Chip
+import model.Field
 
 abstract class Player(internal open val chip: Chip) {
 
@@ -10,5 +11,5 @@ abstract class Player(internal open val chip: Chip) {
         else
             Chip.BLACK
 
-    abstract fun play(board: List<List<Chip>>): Pair<Int, Int>
+    abstract fun play(field:Field): Pair<Int, Int>
 }
