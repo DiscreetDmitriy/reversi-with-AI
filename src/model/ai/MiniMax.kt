@@ -4,25 +4,22 @@ import model.Field
 
 class MiniMax {
     companion object {
-        var nodesExplored = 0
+        private var nodesExplored = 0
+
         fun solve(
             field: Field,
             depth: Int,
             eval: Evaluator
         ): Pair<Int, Int> {
-            val field1 = Field()
-            for (i in field1.board.indices) {
-                for (j in field1.board[i].indices)
-                    field1.board[i][j] = field.board[i][j]
-            }
-            field1.humanTurn = field.humanTurn
-            var bestMove = -1 to -1;
+            val field1 = copyField(field)
+
+            var bestMove = -1 to -1
             var bestScore = Integer.MIN_VALUE
 
             for (move in field1.occupiable(field1.currentPlayer())) {
                 field1.makeTurn(move.first, move.second, field1.currentPlayer())
 
-                val childScore = MMAB(
+                val childScore = minmax(
                     field = field1,
                     depth = depth,
                     eval = eval,
@@ -40,7 +37,18 @@ class MiniMax {
             return bestMove
         }
 
-        private fun MMAB(
+        private fun copyField(field: Field): Field {
+            val field1 = Field()
+
+            for (i in field1.board.indices) {
+                for (j in field1.board[i].indices)
+                    field1.board[i][j] = field.board[i][j]
+            }
+            field1.humanTurn = field.humanTurn
+            return field1
+        }
+
+        private fun minmax(
             field: Field,
             depth: Int,
             eval: Evaluator,
@@ -50,20 +58,23 @@ class MiniMax {
         ): Int {
             nodesExplored++
 
+            var alpha = alpha
+            var beta = beta
+
             if (depth == 0 || !field.isNotOver())
                 return eval.eval()
 
             if (max && field.occupiable(field.playerAI).isEmpty()
                 || !max && field.occupiable(field.playerHuman).isNotEmpty()
-            ) return MMAB(field, depth - 1, eval, !max, alpha, beta)
+            ) return minmax(field, depth - 1, eval, !max, alpha, beta)
 
             var score: Int
 
             if (max) {
                 score = Int.MIN_VALUE
                 for (move in field.occupiable(field.playerAI)) {
-                    // new board
-                    val childScore = MMAB(/*new board*/field, depth - 1, eval, false, alpha, beta)
+                    val field = copyField(field)
+                    val childScore = minmax(field, depth - 1, eval, false, alpha, beta)
 
                     if (childScore > score)
                         score = childScore
@@ -77,8 +88,9 @@ class MiniMax {
                 score = Int.MAX_VALUE
 
                 for (move in field.occupiable(field.playerHuman)) {
-                    // new board
-                    val childScore = MMAB(/*new board*/field, depth - 1, eval, true, alpha, beta)
+                    val field = copyField(field)
+                    field.makeTurn(move.first, move.second, field.playerAI)
+                    val childScore = minmax(field, depth - 1, eval, true, alpha, beta)
                     if (childScore < score)
                         score = childScore
                     if (score < beta)

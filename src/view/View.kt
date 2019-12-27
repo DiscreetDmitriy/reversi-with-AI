@@ -77,7 +77,7 @@ class View : View("Reversi") {
         val timer = Timer("TimerBetweenTurns", true)
         val task = FXTimerTask(
                 {
-                    val (x, y) = field.currentPlayer().play(field.board())
+                    val (x, y) = field.currentPlayer().play(field)
                     field.makeTurn(x, y, field.currentPlayer())
                     updateScore()
                     repaint()
